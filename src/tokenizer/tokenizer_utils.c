@@ -1,0 +1,57 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenizer_utils.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abdunass <marvin@42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/07/30 00:00:00 by abdunass        #+#    #+#             */
+/*   Updated: 2026/07/30 00:00:00 by abdunass       ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+t_token	*new_token(t_token_type type, char *value)
+{
+	t_token	*token;
+
+	token = malloc(sizeof(t_token));
+	if (!token)
+		return (NULL);
+	token->type = type;
+	token->value = value;
+	token->single_quoted = 0;
+	token->double_quoted = 0;
+	token->join_next = 0;
+	token->next = NULL;
+	return (token);
+}
+
+void	add_token_back(t_token **head, t_token *new)
+{
+	t_token	*last;
+
+	if (!*head)
+	{
+		*head = new;
+		return ;
+	}
+	last = *head;
+	while (last->next)
+		last = last->next;
+	last->next = new;
+}
+
+void	free_tokens(t_token *tokens)
+{
+	t_token	*next;
+
+	while (tokens)
+	{
+		next = tokens->next;
+		free(tokens->value);
+		free(tokens);
+		tokens = next;
+	}
+}
