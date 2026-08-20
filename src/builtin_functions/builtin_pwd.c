@@ -16,8 +16,8 @@ int	builtin_pwd(t_cmd *cmd, t_shell *shell)
 {
 	char	cwd[4096];
 
-	(void)cmd;
 	(void)shell;
+	(void)cmd;
 	if (!getcwd(cwd, sizeof(cwd)))
 	{
 		perror("minishell: pwd");

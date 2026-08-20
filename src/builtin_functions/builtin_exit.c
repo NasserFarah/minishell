@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_exit.c                                   :+:      :+:    :+:   */
+/*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abdunass <marvin@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/30 00:00:00 by abdunass        #+#    #+#             */
-/*   Updated: 2026/07/30 00:00:00 by abdunass       ###   ########.fr       */
+/*   Updated: 2026/08/17 21:26:30 by fnasser          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 static int	is_numeric(const char *s)
 {
 	int	i;
-	//size_t	n;
 
 	i = 0;
 	if (s[i] == '+' || s[i] == '-')
@@ -44,7 +43,7 @@ static int	non_numeric_exit(t_shell *shell, const char *arg)
 static int	exit_code_mod(const char *s, t_shell *shell)
 {
 	int	i;
-	int j;
+	int	j;
 	int	neg;
 	int	val;
 

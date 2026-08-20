@@ -6,7 +6,7 @@
 /*   By: abdunass <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/30 00:00:00 by abdunass          #+#    #+#             */
-/*   Updated: 2026/08/14 19:05:27 by fnasser          ###   ########.fr       */
+/*   Updated: 2026/08/21 00:14:01 by fnasser          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,15 @@
 static int	is_assignment_word(t_token *word)
 {
 	int	x;
+	int	y;
 
-	x = ft_strchr(word->value, '=') && is_valid_name(word->value);
-	return (x);
+	x = ft_strchr(word->value, '=') != NULL;
+	y = is_valid_name(word->value) == 1;
+	if (x == 1 && y == 1)
+		return (1);
+	return (0);
 }
+
 static void	expand_cmd_args(t_cmd *cmd, t_shell *shell)
 {
 	t_token	*old;
@@ -28,7 +33,9 @@ static void	expand_cmd_args(t_cmd *cmd, t_shell *shell)
 
 	old = cmd->args;
 	new_args = NULL;
-	is_export = old && ft_strncmp(old->value, "export", 7) == 0;
+	is_export = 0;
+	if (old && ft_strncmp(old->value, "export", 7) == 0)
+		is_export = 1;
 	while (old)
 	{
 		word = take_word(&old);

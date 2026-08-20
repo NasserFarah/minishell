@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                      :+:      :+:    :+:   */
+/*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abdunass <marvin@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/27 22:43:27 by abdunass        #+#    #+#             */
-/*   Updated: 2026/07/27 22:43:27 by abdunass       ###   ########.fr       */
+/*   Updated: 2026/08/21 00:16:04 by fnasser          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define MINISHELL_H
 
 // signals
-#define _POSIX_C_SOURCE 200809L
+# define _POSIX_C_SOURCE 200809L
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -49,6 +49,7 @@ void		free_env(t_env *env);
 char		*env_get(t_env *env, const char *key);
 void		env_set(t_env **env, const char *key, const char *value);
 void		env_unset(t_env **env, const char *key);
+void		env_append_new(t_env **env, const char *key, const char *value);
 
 // tokenizer
 t_token		*tokenize(const char *line);

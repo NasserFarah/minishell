@@ -48,7 +48,9 @@ int	builtin_cd(t_cmd *cmd, t_shell *shell)
 {
 	char	*target;
 	char	oldpwd[4096];
+	int		i;
 
+	i = 0;
 	if (cmd->args->next)
 		target = cmd->args->next->value;
 	else
@@ -58,15 +60,14 @@ int	builtin_cd(t_cmd *cmd, t_shell *shell)
 		ft_putstr_fd("minishell: cd: HOME not set\n", STDERR_FILENO);
 		return (1);
 	}
+	if (cmd->args->next->next)
+		return (ft_putstr_fd("bash: cd: too many arguments\n", 2), 1);
 	if (ft_strncmp("-", target, 2) == 0)
 		return (minus(shell, target));
 	if (!getcwd(oldpwd, sizeof(oldpwd)))
 		oldpwd[0] = '\0';
 	if (chdir(target) == -1)
-	{
-		perror("minishell: cd");
-		return (1);
-	}
+		return (perror("minishell: cd"), 1);
 	update_pwd(shell, oldpwd);
 	return (0);
 }

@@ -1,16 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_export.c                                 :+:      :+:    :+:   */
+/*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abdunass <marvin@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/30 00:00:00 by abdunass        #+#    #+#             */
-/*   Updated: 2026/07/30 00:00:00 by abdunass       ###   ########.fr       */
+/*   Updated: 2026/08/21 00:14:47 by fnasser          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+// special for export with no equal
+static void	env_set_no_eq(t_env **env, const char *key)
+{
+	t_env	*cur;
+	char	*value;
+
+	cur = *env;
+	value = NULL;
+	while (cur)
+	{
+		if (cur->key && ft_strncmp(cur->key, key, ft_strlen(key) + 1) == 0)
+		{
+			return ;
+		}
+		cur = cur->next;
+	}
+	env_append_new(env, key, value);
+}
 
 static int	export_one(t_shell *shell, const char *arg)
 {
@@ -32,7 +51,7 @@ static int	export_one(t_shell *shell, const char *arg)
 		free(name);
 	}
 	else if (!env_get(shell->env, arg))
-		env_set(&shell->env, arg, "");
+		env_set_no_eq(&shell->env, arg);
 	return (1);
 }
 

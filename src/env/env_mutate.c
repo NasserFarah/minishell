@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static void	env_append_new(t_env **env, const char *key, const char *value)
+void	env_append_new(t_env **env, const char *key, const char *value)
 {
 	t_env	*node;
 	t_env	*cur;
