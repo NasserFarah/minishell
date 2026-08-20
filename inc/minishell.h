@@ -16,6 +16,9 @@
 // signals
 # define _POSIX_C_SOURCE 200809L
 
+# define PROMPT_GREEN "\001\033[1;32m\002"
+# define PROMPT_RESET "\001\033[0m\002"
+
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>

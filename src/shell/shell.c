@@ -35,6 +35,21 @@ static void	process_line(t_shell *shell, char *line)
 	}
 }
 
+static void	build_prompt(char *prompt)
+{
+	char	cwd[4096];
+	char	*color;
+
+	if (!getcwd(cwd, sizeof(cwd)))
+		cwd[0] = '\0';
+	color = PROMPT_GREEN;
+	prompt[0] = '\0';
+	ft_strlcat(prompt, color, 4096);
+	ft_strlcat(prompt, cwd, 4096);
+	ft_strlcat(prompt, "$ ", 4096);
+	ft_strlcat(prompt, PROMPT_RESET, 4096);
+}
+
 void	shell_loop(t_shell *shell)
 {
 	char	*line;
@@ -44,7 +59,7 @@ void	shell_loop(t_shell *shell)
 	{
 		if (!getcwd(prompt, sizeof(prompt)))
 			break ;
-		ft_strlcat(prompt, "$ ", 4096);
+		build_prompt(prompt);
 		line = readline(prompt);
 		if (!line)
 		{
