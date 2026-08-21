@@ -80,6 +80,8 @@ fclean: clean
 
 re: fclean all
 
+test: re clean
+
 bonus: all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re test bonus

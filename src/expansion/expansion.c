@@ -41,7 +41,7 @@ static void	expand_cmd_args(t_cmd *cmd, t_shell *shell)
 		word = take_word(&old);
 		expand_fragments(word, shell);
 		if (is_export && new_args && is_assignment_word(word))
-			add_token_back(&new_args, new_token(TOKEN_WORD, join_word(word)));
+			add_token_back(&new_args, new_token(TOKEN_WORD, join_word(word), 0, 0));
 		else
 			add_token_back(&new_args, split_word(word));
 		free_tokens(word);

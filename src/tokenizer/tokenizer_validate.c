@@ -56,11 +56,33 @@ static int	validate_redirs(t_token *tokens)
 	return (1);
 }
 
+static int	brace_syntax(t_token *tokens)
+{
+	while (tokens)
+	{
+		if (tokens->open == 1 || tokens->close == 1)
+		{
+			ft_putstr_fd("minishell: syntax error near unexpected token `",
+		STDERR_FILENO);
+			if (tokens->open == 1)
+				ft_putstr_fd("(", STDERR_FILENO);
+			else
+				ft_putstr_fd(")", STDERR_FILENO);
+			ft_putstr_fd("'\n", STDERR_FILENO);
+			return (0);
+		}
+		tokens = tokens->next;
+	}
+	return (1);
+}
+
 int	validate_tokens(t_token *tokens)
 {
 	if (!validate_pipes(tokens))
 		return (0);
 	if (!validate_redirs(tokens))
+		return (0);
+	if (!brace_syntax(tokens))
 		return (0);
 	return (1);
 }

@@ -52,7 +52,7 @@ void	expand_cmd_redirs(t_cmd *cmd, t_shell *shell)
 		expand_fragments(redir->target, shell);
 		joined = join_word(redir->target);
 		free_tokens(redir->target);
-		redir->target = new_token(TOKEN_WORD, joined);
+		redir->target = new_token(TOKEN_WORD, joined, 0, 0);
 		redir = redir->next;
 	}
 }

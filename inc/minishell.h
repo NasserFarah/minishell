@@ -56,7 +56,7 @@ void		env_append_new(t_env **env, const char *key, const char *value);
 
 // tokenizer
 t_token		*tokenize(const char *line);
-t_token		*new_token(t_token_type type, char *value);
+t_token		*new_token(t_token_type type, char *value, int open, int close);
 t_token		*make_word_token(const char *line, int *i, int *error);
 void		add_token_back(t_token **head, t_token *new);
 void		free_tokens(t_token *tokens);

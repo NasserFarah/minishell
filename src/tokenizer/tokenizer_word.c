@@ -40,7 +40,7 @@ static t_token	*parse_quoted_segment(const char *line, int *i, int *error)
 		*error = 1;
 		return (NULL);
 	}
-	token = new_token(TOKEN_WORD, ft_substr(line, start, *i - start));
+	token = new_token(TOKEN_WORD, ft_substr(line, start, *i - start), 0, 0);
 	(*i)++;
 	if (token && quote == '\'')
 		token->single_quoted = 1;
@@ -49,15 +49,23 @@ static t_token	*parse_quoted_segment(const char *line, int *i, int *error)
 	return (token);
 }
 
-static t_token	*parse_bare_segment(const char *line, int *i)
+static t_token	*parse_bare_segment(char *line, int *i)
 {
 	int	start;
+	int	open;
+	int	close;
 
 	start = *i;
 	while (segment_continues(line, *i) && line[*i] != '\''
 		&& line[*i] != '"')
-		(*i)++;
-	return (new_token(TOKEN_WORD, ft_substr(line, start, *i - start)));
+		{
+			if (line[*i] == '(')
+				open = 1;
+			if (line[*i] == ')')
+				close = 1;
+			(*i)++;
+		}
+	return (new_token(TOKEN_WORD, ft_substr(line, start, *i - start), open, close));
 }
 
 t_token	*make_word_token(const char *line, int *i, int *error)
@@ -71,7 +79,7 @@ t_token	*make_word_token(const char *line, int *i, int *error)
 		if (line[*i] == '\'' || line[*i] == '"')
 			seg = parse_quoted_segment(line, i, error);
 		else
-			seg = parse_bare_segment(line, i);
+			seg = parse_bare_segment((char *)line, i);
 		if (!seg)
 		{
 			free_tokens(head);

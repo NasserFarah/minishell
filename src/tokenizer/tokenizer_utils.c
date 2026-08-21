@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_token	*new_token(t_token_type type, char *value)
+t_token	*new_token(t_token_type type, char *value, int open, int close)
 {
 	t_token	*token;
 
@@ -25,6 +25,8 @@ t_token	*new_token(t_token_type type, char *value)
 	token->double_quoted = 0;
 	token->join_next = 0;
 	token->next = NULL;
+	token->close = close; 
+	token->open = open;
 	return (token);
 }
 

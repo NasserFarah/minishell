@@ -28,25 +28,25 @@ static t_token	*make_operator_token(const char *line, int *i)
 	if (line[*i] == '|')
 	{
 		(*i)++;
-		return (new_token(TOKEN_PIPE, NULL));
+		return (new_token(TOKEN_PIPE, NULL, 0, 0));
 	}
 	if (line[*i] == '<')
 	{
 		if (line[*i + 1] == '<')
 		{
 			*i += 2;
-			return (new_token(TOKEN_HEREDOC, NULL));
+			return (new_token(TOKEN_HEREDOC, NULL, 0, 0));
 		}
 		(*i)++;
-		return (new_token(TOKEN_REDIR_IN, NULL));
+		return (new_token(TOKEN_REDIR_IN, NULL, 0, 0));
 	}
 	if (line[*i + 1] == '>')
 	{
 		*i += 2;
-		return (new_token(TOKEN_REDIR_APPEND, NULL));
+		return (new_token(TOKEN_REDIR_APPEND, NULL, 0, 0));
 	}
 	(*i)++;
-	return (new_token(TOKEN_REDIR_OUT, NULL));
+	return (new_token(TOKEN_REDIR_OUT, NULL, 0, 0));
 }
 
 static int	next_token(const char *line, int *i, t_token **head)

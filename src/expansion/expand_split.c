@@ -18,7 +18,7 @@ static void	finalize_word(t_split *sp)
 
 	if (sp->touched)
 	{
-		tok = new_token(TOKEN_WORD, sp->acc);
+		tok = new_token(TOKEN_WORD, sp->acc, 0, 0);
 		add_token_back(&sp->out, tok);
 	}
 	else

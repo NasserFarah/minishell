@@ -25,6 +25,34 @@ static void	child_fail(const char *name, int code)
 	exit(code);
 }
 
+static void	exec_fail(const char *name)
+{
+	struct stat	st;
+
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd((char *)name, STDERR_FILENO);
+	if ((errno == EACCES || errno == EISDIR)
+		&& stat(name, &st) == 0 && S_ISDIR(st.st_mode))
+	{
+		ft_putstr_fd(": Is a directory\n", STDERR_FILENO);
+		exit(126);
+	}
+	if (errno == ENOENT)
+	{
+		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+		exit(127);
+	}
+	if (errno == EACCES)
+	{
+		ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
+		exit(126);
+	}
+	ft_putstr_fd(": ", STDERR_FILENO);
+	ft_putstr_fd(strerror(errno), STDERR_FILENO);
+	ft_putstr_fd("\n", STDERR_FILENO);
+	exit(126);
+}
+
 void	run_child(t_cmd *cmd, t_shell *shell, t_pipeline *pl, int idx)
 {
 	char	*path;
@@ -47,6 +75,5 @@ void	run_child(t_cmd *cmd, t_shell *shell, t_pipeline *pl, int idx)
 	argv = build_argv(cmd->args);
 	envp = build_envp(shell->env);
 	execve(path, argv, envp);
-	perror(path);
-	exit(126);
+	exec_fail(path);
 }

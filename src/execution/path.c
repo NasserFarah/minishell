@@ -54,16 +54,12 @@ static int	try_candidate(char *candidate, int *exit_code)
 	return (0);
 }
 
-static char	*search_path(const char *cmd, t_env *env, int *exit_code)
+static char	*search_path(const char *cmd, char *path_val, int *exit_code)
 {
-	char	*path_val;
 	char	**dirs;
 	char	*candidate;
 	int		i;
 
-	path_val = env_get(env, "PATH");
-	if (!path_val)
-		return (NULL);
 	dirs = ft_split(path_val, ':');
 	if (!dirs)
 		return (NULL);
@@ -84,17 +80,13 @@ static char	*search_path(const char *cmd, t_env *env, int *exit_code)
 
 char	*resolve_executable(const char *cmd, t_env *env, int *exit_code)
 {
+	char	*path_val;
+
 	*exit_code = 127;
 	if (ft_strchr(cmd, '/'))
-	{
-		if (access(cmd, F_OK) != 0)
-			return (NULL);
-		if (access(cmd, X_OK) != 0)
-		{
-			*exit_code = 126;
-			return (NULL);
-		}
 		return (ft_strdup(cmd));
-	}
-	return (search_path(cmd, env, exit_code));
+	path_val = env_get(env, "PATH");
+	if (!path_val || !*path_val)
+		return (ft_strdup(cmd));
+	return (search_path(cmd, path_val, exit_code));
 }

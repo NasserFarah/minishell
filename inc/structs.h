@@ -37,6 +37,8 @@ typedef struct s_token
 	int				single_quoted;
 	int				double_quoted;
 	int				join_next;
+	int				open;
+	int				close;
 	struct s_token	*next;
 }	t_token;
 
