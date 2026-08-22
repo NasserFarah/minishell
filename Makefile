@@ -39,6 +39,7 @@ SRCS		= src/main/main.c \
 			  src/execution/child.c \
 			  src/execution/wait_status.c \
 			  src/execution/standalone.c \
+			  src/execution/ft_strdplicate.c \
 			  src/builtin_functions/builtins.c \
 			  src/builtin_functions/builtin_utils.c \
 			  src/builtin_functions/builtin_echo.c \
@@ -51,24 +52,18 @@ SRCS		= src/main/main.c \
 			  src/builtin_functions/builtin_exit.c
 
 OBJS		= $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
-DEPS		= $(OBJS:.o=.d)
-
-LIBFT_SRCS	= $(wildcard $(LIBFT_DIR)/*.c)
-LIBFT_HDRS	= $(wildcard $(LIBFT_DIR)/*.h)
 
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LIBS) -o $(NAME)
 
-$(LIBFT): $(LIBFT_SRCS) $(LIBFT_HDRS)
+$(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INCLUDES) -MMD -MP -c $< -o $@
-
--include $(DEPS)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
 	$(RM) -r $(OBJDIR)
@@ -80,8 +75,6 @@ fclean: clean
 
 re: fclean all
 
-test: re clean
+test: all clean
 
-bonus: all
-
-.PHONY: all clean fclean re test bonus
+.PHONY: all clean fclean re test

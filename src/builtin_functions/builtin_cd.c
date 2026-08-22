@@ -28,6 +28,7 @@ static int	minus(t_shell *shell, char *target)
 	char	cwd[4096];
 
 	target = env_get(shell->env, "OLDPWD");
+	printf("here1\n");
 	if (!target)
 	{
 		ft_putstr_fd("minishell: cd: OLDPWD not set\n", STDERR_FILENO);
@@ -41,6 +42,17 @@ static int	minus(t_shell *shell, char *target)
 		return (1);
 	}
 	update_pwd(shell, cwd);
+	printf("here\n");
+	return (0);
+}
+
+static int	lone(char *oldpwd, const char *target, t_shell *shell)
+{
+	if (!getcwd(oldpwd, sizeof(oldpwd)))
+		oldpwd[0] = '\0';
+	if (chdir(target) == -1)
+		return (perror("minishell: cd"), 1);
+	update_pwd(shell, oldpwd);
 	return (0);
 }
 
@@ -48,10 +60,8 @@ int	builtin_cd(t_cmd *cmd, t_shell *shell)
 {
 	char	*target;
 	char	oldpwd[4096];
-	int		i;
 
-	i = 0;
-	if (cmd->args->next)
+	if (cmd->args && cmd->args->next)
 		target = cmd->args->next->value;
 	else
 		target = env_get(shell->env, "HOME");
@@ -60,6 +70,8 @@ int	builtin_cd(t_cmd *cmd, t_shell *shell)
 		ft_putstr_fd("minishell: cd: HOME not set\n", STDERR_FILENO);
 		return (1);
 	}
+	if (cmd->args->next == NULL)
+		return (lone(oldpwd, target, shell));
 	if (cmd->args->next->next)
 		return (ft_putstr_fd("bash: cd: too many arguments\n", 2), 1);
 	if (ft_strncmp("-", target, 2) == 0)
