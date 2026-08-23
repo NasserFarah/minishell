@@ -75,6 +75,6 @@ fclean: clean
 
 re: fclean all
 
-test: all clean
+test: fclean all clean
 
 .PHONY: all clean fclean re test
