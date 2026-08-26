@@ -36,7 +36,7 @@ static char	*dollar_replacement(const char *s, int *i, t_shell *shell)
 	if (!is_var_start(s[*i + 1]))
 	{
 		(*i)++;
-		return (ft_strdup("$"));
+		return (ft_strduplicate("$"));
 	}
 	*i += 1;
 	start = *i;
@@ -46,8 +46,8 @@ static char	*dollar_replacement(const char *s, int *i, t_shell *shell)
 	value = env_get(shell->env, name);
 	free(name);
 	if (!value)
-		return (ft_strdup(""));
-	return (ft_strdup(value));
+		return (ft_strduplicate(""));
+	return (ft_strduplicate(value));
 }
 
 char	*expand_fragment(const char *value, t_shell *shell)
@@ -57,7 +57,7 @@ char	*expand_fragment(const char *value, t_shell *shell)
 	char	*joined;
 	int		i;
 
-	result = ft_strdup("");
+	result = ft_strduplicate("");
 	i = 0;
 	while (value[i])
 	{

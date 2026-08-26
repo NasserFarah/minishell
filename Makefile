@@ -40,6 +40,8 @@ SRCS		= src/main/main.c \
 			  src/execution/wait_status.c \
 			  src/execution/standalone.c \
 			  src/execution/ft_strdplicate.c \
+			  src/execution/get_next_line.c \
+			  src/execution/get_next_line_utils.c \
 			  src/builtin_functions/builtins.c \
 			  src/builtin_functions/builtin_utils.c \
 			  src/builtin_functions/builtin_echo.c \

@@ -16,7 +16,7 @@ static void	update_pwd(t_shell *shell, char *oldpwd)
 {
 	char	newpwd[4096];
 
-	if (getcwd(newpwd, sizeof(newpwd)))
+	if (getcwd(newpwd, 4096))
 	{
 		env_set(&shell->env, "OLDPWD", oldpwd);
 		env_set(&shell->env, "PWD", newpwd);
@@ -33,7 +33,7 @@ static int	minus(t_shell *shell, char *target)
 		ft_putstr_fd("minishell: cd: OLDPWD not set\n", STDERR_FILENO);
 		return (1);
 	}
-	if (!getcwd(cwd, sizeof(cwd)))
+	if (!getcwd(cwd, 4096))
 		cwd[0] = '\0';
 	if (chdir(target) == -1)
 	{
@@ -44,13 +44,13 @@ static int	minus(t_shell *shell, char *target)
 	return (0);
 }
 
-static int	lone(char *oldpwd, const char *target, t_shell *shell)
+static int	lone(char *cwd, const char *target, t_shell *shell)
 {
-	if (!getcwd(oldpwd, sizeof(oldpwd)))
-		oldpwd[0] = '\0';
+	if (!getcwd(cwd, 4096))
+		cwd[0] = '\0';
 	if (chdir(target) == -1)
 		return (perror("minishell: cd"), 1);
-	update_pwd(shell, oldpwd);
+	update_pwd(shell, cwd);
 	return (0);
 }
 

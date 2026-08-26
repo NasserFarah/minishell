@@ -54,9 +54,9 @@ t_env	*env_init(char **envp)
 		eq = ft_strchr(envp[i], '=');
 		if (eq)
 			node = new_env_node(ft_substr(envp[i], 0, eq - envp[i]),
-					ft_strdup(eq + 1));
+					ft_strduplicate(eq + 1));
 		else
-			node = new_env_node(ft_strdup(envp[i]), NULL);
+			node = new_env_node(ft_strduplicate(envp[i]), NULL);
 		env_add_back(&head, node);
 		i++;
 	}

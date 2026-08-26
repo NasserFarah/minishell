@@ -23,7 +23,7 @@ static void	finalize_word(t_split *sp)
 	}
 	else
 		free(sp->acc);
-	sp->acc = ft_strdup("");
+	sp->acc = ft_strduplicate("");
 	sp->touched = 0;
 }
 
@@ -67,7 +67,7 @@ t_token	*split_word(t_token *word)
 {
 	t_split	sp;
 
-	sp.acc = ft_strdup("");
+	sp.acc = ft_strduplicate("");
 	sp.touched = 0;
 	sp.out = NULL;
 	while (word)

@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-char	*ft_strdup(const char *s)
+char	*ft_strduplicate(const char *s)
 {
 	char	*dest;
 	int		i;

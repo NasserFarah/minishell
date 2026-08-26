@@ -17,7 +17,7 @@ char	*join_word(t_token *word)
 	char	*acc;
 	char	*joined;
 
-	acc = ft_strdup("");
+	acc = ft_strduplicate("");
 	while (word)
 	{
 		joined = ft_strjoin(acc, word->value);

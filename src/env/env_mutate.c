@@ -20,8 +20,8 @@ void	env_append_new(t_env **env, const char *key, const char *value)
 	node = malloc(sizeof(t_env));
 	if (!node)
 		return ;
-	node->key = ft_strdup(key);
-	node->value = ft_strdup(value);
+	node->key = ft_strduplicate(key);
+	node->value = ft_strduplicate(value);
 	node->next = NULL;
 	if (!*env)
 	{
@@ -44,7 +44,7 @@ void	env_set(t_env **env, const char *key, const char *value)
 		if (cur->key && ft_strncmp(cur->key, key, ft_strlen(key) + 1) == 0)
 		{
 			free(cur->value);
-			cur->value = ft_strdup(value);
+			cur->value = ft_strduplicate(value);
 			return ;
 		}
 		cur = cur->next;

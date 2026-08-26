@@ -59,9 +59,10 @@ static int	heredoc_body(const char *delim, int want_expand, t_shell *shell)
 		return (-1);
 	while (line && !is_delim(line, delim))
 	{
+		red = 0;
 		write(0, ">", 1);
-		red = read(STDIN_FILENO, line, 2048);
-		if (red <= 0)
+		line = get_next_line(STDIN_FILENO);
+		if (line == NULL)
 			break ;
 	}
 	return (red);

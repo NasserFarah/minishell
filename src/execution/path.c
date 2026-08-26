@@ -84,9 +84,9 @@ char	*resolve_executable(const char *cmd, t_env *env, int *exit_code)
 
 	*exit_code = 127;
 	if (ft_strchr(cmd, '/'))
-		return (ft_strdup(cmd));
+		return (ft_strduplicate(cmd));
 	path_val = env_get(env, "PATH");
 	if (!path_val || !*path_val)
-		return (ft_strdup(cmd));
+		return (ft_strduplicate(cmd));
 	return (search_path(cmd, path_val, exit_code));
 }

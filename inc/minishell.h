@@ -19,8 +19,13 @@
 # define PROMPT_GREEN "\001\033[1;32m\002"
 # define PROMPT_RESET "\001\033[0m\002"
 
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 6
+# endif
+
 # include <stdio.h>
 # include <stdlib.h>
+# include <stdint.h>
 # include <unistd.h>
 # include <string.h>
 # include <errno.h>
@@ -81,6 +86,7 @@ void		expand_cmd_redirs(t_cmd *cmd, t_shell *shell);
 
 // execution
 void		execute(t_shell *shell);
+char		*ft_strduplicate(const char *s);
 char		*resolve_executable(const char *cmd, t_env *env, int *exit_code);
 char		**build_argv(t_token *args);
 char		**build_envp(t_env *env);
@@ -107,5 +113,13 @@ int			builtin_export(t_cmd *cmd, t_shell *shell);
 void		print_export(t_env *env);
 int			builtin_unset(t_cmd *cmd, t_shell *shell);
 int			builtin_exit(t_cmd *cmd, t_shell *shell);
+
+// gnl
+char	*get_next_line(int fd);
+size_t	ft_strlen(const char *s);
+char	*ft_strjoin_gnl(char *s1, char const *s2);
+char	*ft_strchr(const char *s, int c);
+void	*ft_calloc(size_t nmemb, size_t size);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
 
 #endif
