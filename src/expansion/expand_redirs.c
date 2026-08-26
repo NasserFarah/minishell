@@ -49,6 +49,10 @@ void	expand_cmd_redirs(t_cmd *cmd, t_shell *shell)
 	{
 		if (redir->type == REDIR_HEREDOC)
 			redir->heredoc_expand = !any_quoted(redir->target);
+		else if (redir->target && !redir->target->single_quoted
+			&& !redir->target->double_quoted)
+			redir->target->value = tilde_expansion(redir->target->value,
+					shell);
 		expand_fragments(redir->target, shell);
 		joined = join_word(redir->target);
 		free_tokens(redir->target);

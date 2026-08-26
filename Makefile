@@ -14,6 +14,7 @@ LIBS		= -lreadline
 
 SRCS		= src/main/main.c \
 			  src/shell/shell.c \
+			  src/shell/shell_input.c \
 			  src/shell/signals.c \
 			  src/shell/signals_exec.c \
 			  src/env/env.c \
@@ -30,11 +31,14 @@ SRCS		= src/main/main.c \
 			  src/expansion/expand_var.c \
 			  src/expansion/expand_split.c \
 			  src/expansion/expand_redirs.c \
+			  src/expansion/tilde.c \
+			  src/expansion/tilde_utils.c \
 			  src/execution/execute.c \
 			  src/execution/path.c \
 			  src/execution/exec_arrays.c \
 			  src/execution/redirect.c \
 			  src/execution/heredoc.c \
+			  src/execution/heredoc_utils.c \
 			  src/execution/pipeline.c \
 			  src/execution/child.c \
 			  src/execution/wait_status.c \

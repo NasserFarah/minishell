@@ -45,9 +45,12 @@ extern int	g_signal;
 // shell
 void		shell_loop(t_shell *shell);
 void		free_shell(t_shell *shell);
+char		*read_interactive_line(char *prompt);
+char		*read_noninteractive_line(void);
 
 // signals
 void		init_signals(void);
+void		init_signals_heredoc(void);
 void		signals_ignore_during_exec(void);
 void		signals_child_default(void);
 
@@ -83,6 +86,8 @@ void		expand_fragments(t_token *word, t_shell *shell);
 t_token		*split_word(t_token *word);
 char		*join_word(t_token *word);
 void		expand_cmd_redirs(t_cmd *cmd, t_shell *shell);
+char		*tilde_expansion(char *word, t_shell *shell);
+char		*tilde_expand_assign(char *value, t_shell *shell);
 
 // execution
 void		execute(t_shell *shell);
@@ -91,8 +96,12 @@ char		*resolve_executable(const char *cmd, t_env *env, int *exit_code);
 char		**build_argv(t_token *args);
 char		**build_envp(t_env *env);
 int			apply_redirs(t_redir *redirs);
-void		resolve_heredocs(t_shell *shell);
+int			resolve_heredocs(t_shell *shell);
 void		close_heredoc_fds(t_cmd *pipeline);
+int			is_delim(const char *line, const char *delim);
+void		warn_eof(const char *delim);
+char		*heredoc_line(void);
+void		write_line(int fd, char *line, int want_expand, t_shell *shell);
 t_pipeline	*build_pipeline(int n_cmds);
 void		wire_pipes(t_pipeline *pl, int idx);
 void		close_pipes(t_pipeline *pl);

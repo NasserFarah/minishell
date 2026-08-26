@@ -24,6 +24,16 @@ static int	is_assignment_word(t_token *word)
 	return (0);
 }
 
+static void	apply_tilde(t_token *word, int is_export, t_shell *shell)
+{
+	if (!word || word->single_quoted || word->double_quoted)
+		return ;
+	if (is_export && is_assignment_word(word))
+		word->value = tilde_expand_assign(word->value, shell);
+	else
+		word->value = tilde_expansion(word->value, shell);
+}
+
 static void	expand_cmd_args(t_cmd *cmd, t_shell *shell)
 {
 	t_token	*old;
@@ -39,6 +49,7 @@ static void	expand_cmd_args(t_cmd *cmd, t_shell *shell)
 	while (old)
 	{
 		word = take_word(&old);
+		apply_tilde(word, is_export, shell);
 		expand_fragments(word, shell);
 		if (is_export && tmp && is_assignment_word(word))
 			add_token_back(&tmp, new_token(TOKEN_WORD, join_word(word), 0, 0));

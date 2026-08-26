@@ -1,0 +1,66 @@
+# command	mode	note
+	diff	$> | Exit de l'ancienne commande
+   	diff	0
+\t\t	crash_check	0 | Crl + V + Tab
+:	crash_check	0 | Marche aussi pour "#"
+!	crash_check	1
+>	diff	bash: syntax error near unexpected token `newline' $> | 2
+<	diff	2
+>>	diff	2
+<<	diff	2
+<>	diff	2
+>>>>>	diff	bash: syntax error near unexpected token `>>' $> | 2
+>>>>>>>>>>>>>>>	diff	bash: syntax error near unexpected token `>>' $> | 2
+<<<<<	diff	bash: syntax error near unexpected token `<<' $> | 2
+<<<<<<<<<<<<<<<<	diff	bash: syntax error near unexpected token `<<' $> | 2
+> > > >	diff	bash: syntax error near unexpected token `>' $> | 2 | Marche aussi pour <
+>> >> >> >>	diff	bash: syntax error near unexpected token `>>' $> | 2 | Marche aussi pour <
+>>>> >> >> >>	diff	bash: syntax error near unexpected token `>>' $> | 2 | Marche aussi pour <
+/	diff	bash: /: Is a directory $> | 126
+//	diff	bash: //: Is a directory $> | 126
+/.	diff	bash: /.: Is a directory $> | 126
+/./../../../../..	diff	bash: /./../../../../..: Is a directory $> | 126
+///////	diff	bash: ///////: Is a directory $> | 126
+\\\\	diff	bash: \: command not found | 127
+\\\\\\\\	diff	bash: \\: command not found | 127
+\\\\\\\\\\\\\\\\	diff	bash: \\\\: command not found | 127
+-	diff	bash: -: command not found $> | 127 | Marche aussi pour "_@°]=+£$?"
+|	diff	bash: syntax error near unexpected token `|' $> | 2 | Marche aussi pour les metacharacters "&();"
+| hola	diff	bash: syntax error near unexpected token `|' $> | 2
+| | |	diff	bash: syntax error near unexpected token `|' $> | 2
+||	diff	bash: syntax error near unexpected token `||' $> | 2
+|||||	diff	bash: syntax error near unexpected token `||' $> | 2
+|||||||||||||	diff	bash: syntax error near unexpected token `||' $> | 2
+>>|><	diff	bash: syntax error near unexpected token `|' $> | 2
+&&	diff	bash: syntax error near unexpected token `&&' $> | 2
+&&&&&	diff	bash: syntax error near unexpected token `&&' $> | 2
+&&&&&&&&&&&&&&	diff	bash: syntax error near unexpected token `&&' $> | 2
+;;	diff	bash: syntax error near unexpected token `;;' $> | 2
+;;;;;	diff	bash: syntax error near unexpected token `;;' $> | 2
+;;;;;;;;;;;;;;;	diff	bash: syntax error near unexpected token `;;' $> | 2
+()	diff	bash: syntax error near unexpected token `)' $> | 2
+( ( ) )	diff	bash: syntax error near unexpected token `)' $> | 2
+( ( ( ( ) ) ) )	diff	bash: syntax error near unexpected token `)' $> | 2
+""	diff	bash: : command not found $> | 127
+"hola"	diff	bash: hola: command not found $> | 127
+'hola'	diff	bash: hola: command not found $> | 127
+''	diff	bash: : command not found $> | 127
+*	diff	bash: crashtest.c: command not found $> | 127 | [BONUS]
+*/*	diff	bash: Docs/attest.cation: command not found $> | 127 | [BONUS]
+.	diff	bash: .: filename argument required $> | 2
+..	diff	bash: ..: command not found $> | 127
+~	diff	bash: /home/vietdu91: Is a directory $> | 126
+ABC=hola	diff	$> | 0 | /!\ A gerer comme une erreur
+4ABC=hola	diff	bash: 4ABC=hola: command not found $> | 127
+hola que tal	diff	bash: hola: command not found $> | 127
+Makefile	diff	bash: Makefile: command not found $> | 127
+$?	diff	bash: 0: command not found $> | 127 | Renvoie le code de retour du dernier pipeline exécuté à l'avant-plan
+$?$?	diff	bash: 00: command not found $> | 127
+?$HOME	diff	bash: ?/home/vietdu91: command not found $> | 127
+$	diff	bash: $: command not found $> | 127
+$HOME	diff	bash: /home/vietdu91: Is a directory $> | 126
+$HOMEdskjhfkdshfsd	diff	$> | 0
+"$HOMEdskjhfkdshfsd"	diff	bash: : command not found $> | 127
+'$HOMEdskjhfkdshfsd'	diff	bash: $HOMEsddfddfssfdfs: command not found $> | 127
+$DONTEXIST	diff	$> | 0 | Cas d'un variable inexistant
+$LESS$VAR	diff	bash: -R: command not found $> | 127

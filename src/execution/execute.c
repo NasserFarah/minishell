@@ -75,7 +75,12 @@ void	execute(t_shell *shell)
 {
 	t_pipeline	*pl;
 
-	resolve_heredocs(shell);
+	if (resolve_heredocs(shell) == -1)
+	{
+		close_heredoc_fds(shell->pipeline);
+		shell->exit_status = 130;
+		return ;
+	}
 	if (shell->pipeline->args && !shell->pipeline->next
 		&& is_builtin(shell->pipeline->args->value))
 	{

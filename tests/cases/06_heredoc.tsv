@@ -1,0 +1,20 @@
+# command	mode	note
+cat << hola\n$HOME\nhola	diff	> $HOME > hola /home/vietdu91 $> | 0
+cat << 'hola'\n$HOME\nhola	diff	> $HOME > hola $HOME $> | 0
+cat << "hola"\n$HOME\nhola	diff	> $HOME > hola $HOME $> | 0
+cat << ho"la"\n$HOME\nhola	crash_check	> $HOME > hola $HOME $> | 0
+cat << $HOME\nprout\n/home/vietdu91\n$HO\n$HOME	diff	> prout > /home/vietdu91 > $HO > $HOME $> | 0
+cat << hola > bonjour\nprout\ncroutte\nantoine pue\nhola\ncat bonjour	diff	> prout > croutte > antoine pue > hola $> prout croutte antoine pue | 0
+cat << hola | rev\nprout\ncroutte\nantoine pue\nhola	diff	> prout > croutte > antoine pue > hola tuorp ettuorc eup eniotna $> | 0
+<< hola\nchola\nholache\n     hola\n"hola"\n'hola'\nhola	diff	> chola > holache >      hola > "hola" > 'hola' > hola $> | 0
+<<hola\n\n\nhola	diff	> > > hola $> | 0
+cat <<	diff	bash: syntax error near unexpected token `newline' $> | 2
+cat << prout << lol << koala\nprout\nlol\nkoala	crash_check	> prout > lol > koala $> | 0
+prout << lol << cat << koala\nprout\nlol\ncat\nkoala	crash_check	> prout > lol > cat > koala bash: prout: command not found | 127
+<< $hola\n$hola	diff	> $hola $> | 0
+<< $"hola"$"b"\nholab	diff	> holab $> | 0
+<< $"$hola"$$"b"\n$hola$$b	diff	> $hola$$b $> | 0
+<< ho$la$"$a"$$"b"\nhola$a$$b\nho$la$a$$nb	crash_check	> hola$a$$b > ho$la$a$$nb $> | 0
+echo hola <<< bonjour	diff	hola $> | 0
+echo hola <<<< bonjour	diff	bash: syntax error near unexpected token `<' $> | 2
+echo hola <<<<< bonjour	diff	bash: syntax error near unexpected token `<<' $> | 2

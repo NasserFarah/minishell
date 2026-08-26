@@ -1,0 +1,101 @@
+# command	mode	note
+echo hola > bonjour\ncat bonjour	diff	hola $> | 0 0
+echo que tal >> bonjour\ncat bonjour	diff	hola que tal $> | 0 0
+echo hola > bonjour\necho que tal >> bonjour\ncat < bonjour	diff	$> $> hola que tal $> | 0 0 0
+echo hola > bonjour\nrm bonjour\necho que tal >> bonjour\ncat < bonjour	diff	que tal $> | 0 0 0 0
+echo hola que tal > bonjour\ncat bonjour	diff	hola que tal $> | 0 0
+echo hola que tal > /tmp/bonjour\ncat -e /tmp/bonjour	diff	hola que tal$ $> | 0 0
+export HOLA=hey\necho bonjour > $HOLA\necho $HOLA	diff	$> hola $> | 0 0 0 | Ne fait rien
+whereis grep > Docs/bonjour\ncat Docs/bonjour	diff	grep: /usr/bin/grep /usr/share/man/man1/grep.1.gz /usr/share/man/man1/grep.1posix.gz /usr/share/info/grep.info.gz $> | 0 0
+ls -la > Docs/bonjour\ncat Docs/bonjour	diff	total 16 drwx------  2 vietdu91 [...] . drwxrwxewt 51 root     [...] .. -rwxr-xr-x  8 vietdu91 [...] crashtest.c [...] $> | 0 0
+pwd>bonjour\ncat bonjour	diff	/home/vietdu91/42_works/minishell $> | 0 0
+pwd >                     bonjour\ncat bonjour	diff	/home/vietdu91/42_works/minishell $> | 0 0
+echo hola > > bonjour	diff	bash: syntax error near unexpected token `>' $> | 2
+echo hola < < bonjour	diff	bash: syntax error near unexpected token `<' $> | 2
+echo hola >>> bonjour	diff	bash: syntax error near unexpected token `>' $> | 2
+> bonjour echo hola\ncat bonjour	diff	hola $> | 0 0
+> bonjour | echo hola\ncat bonjour	diff	hola $> $> | 0 0
+prout hola > bonjour\nls	diff	bash: prout: command not found $> bonjour [...] | 127 0 | Erreur mais file "bonjour" cree tout de meme
+echo hola > hello >> hello >> hello\nls\ncat hello	diff	$> hello $> hola $> | 0 0 0
+echo hola > hello >> hello >> hello\necho hola >> hello\ncat < hello	diff	hola hola $> | 0 0 0
+echo hola > hello >> hello >> hello\necho hola >> hello\necho hola > hello >> hello >> hello\ncat < hello	diff	hola $> | 0 0 0 0
+echo hola >> hello >> hello > hello\necho hola >> hello\ncat < hello	diff	hola hola $> | 0 0 0
+echo hola >> hello >> hello > hello\necho hola >> hello\necho hola >> hello >> hello > hello\ncat < hello	diff	hola $> | 0 0 0 0
+echo hola > hello\necho hola >> hello >> hello >> hello\necho hola >> hello\ncat < hello	diff	hola hola hola $> | 0 0 0 0
+echo hola > hello\necho hey > bonjour\necho <bonjour <hello	diff	$> | 0 0 0
+echo hola > hello\necho hey > bonjour\necho <hello <bonjour	diff	$> | 0 0 0
+echo hola > bonjour\necho hey > hello\nrm bonjour hello\necho hola > bonjour > hello > bonjour\ncat bonjour\ncat hello	diff	hola $> $> | 0 0 0 0 0 0
+echo hola > bonjour\necho hey > hello\necho hola > bonjour > hello > bonjour\ncat bonjour\ncat hello	diff	hola $> $> | 0 0 0 0 0
+echo hola > bonjour\necho hey > hello\nrm bonjour hello\necho hola > bonjour >> hello > bonjour\ncat bonjour\ncat hello	diff	hola $> $> | 0 0 0 0 0 0
+echo hola > bonjour\necho hey > hello\nrm bonjour hello\necho hola > bonjour > hello >> bonjour\ncat bonjour\ncat hello	diff	hola $> $> | 0 0 0 0 0 0
+echo hola > bonjour\necho hey > hello\necho hola > bonjour > hello >> bonjour\ncat bonjour\ncat hello	diff	hola $> $> | 0 0 0 0 0
+echo hola > bonjour\necho hey > hello\nrm bonjour hello\necho hola >> bonjour > hello > bonjour\ncat bonjour\ncat hello	diff	hola $> $> | 0 0 0 0 0 0
+echo hola > bonjour\necho hey > hello\necho hola >> bonjour > hello > bonjour\ncat bonjour\ncat hello	diff	hola $> $> | 0 0 0 0 0
+echo hola > bonjour\necho hey > hello\nrm bonjour hello\necho hola >> bonjour >> hello >> bonjour\ncat bonjour\ncat hello	diff	hola $> $> | 0 0 0 0 0 0
+echo hola > bonjour\necho hey > hello\necho hola >> bonjour >> hello >> bonjour\ncat bonjour\ncat hello	diff	hola hola $> hey $> | 0 0 0 0 0
+> bonjour echo hola bonjour\ncat bonjour	diff	bonjour hola $> | 0 0
+>bonjour echo > hola>bonjour>hola>>bonjour>hola hey >bonjour hola >hola\ncat bonjour\ncat hola	diff	$> $> hey hola $> | 0 0 0
+echo bonjour > hola1\necho hello > hola2\necho 2 >hola1 >> hola2\nls\ncat hola1\ncat hola2	diff	hola1  hola2  [...] $> $> hello 2 $> | 0 0 0 0 0 0
+echo bonjour > hola1\necho hello > hola2\necho 2 >>hola1 > hola2\nls\ncat hola1\ncat hola2	diff	hola1  hola2  [...] $> bonjour $> 2 $> | 0 0 0 0 0 0
+> pwd\nls	diff	pwd $> | 0 0
+< pwd	crash_check	bash: pwd: No such file or directory $> | 1
+< Makefile .	crash_check	.: not enough arguments $> | 1 | Voir pourquoi
+cat <pwd	crash_check	bash: pwd: No such file or directory $> | 1
+cat <srcs/pwd	diff	bash: srcs/pwd: No such file or directory $> | 1
+cat <../pwd	crash_check	bash: ../pwd: No such file or directory $> | 1
+cat >>	diff	bash: syntax error near unexpected token `newline'  $> | 2 | Marche aussi pour les autres operateurs de redirection
+cat >>>	diff	bash: syntax error near unexpected token `>'  $> | 2
+cat >> <<	diff	bash: syntax error near unexpected token `<<'  $> | 2
+cat >> > >> << >>	diff	bash: syntax error near unexpected token `>'  $> | 2
+cat < ls	crash_check	bash: ls: No such file or directory $> | 1
+cat < ls > ls	diff	bash: ls: No such file or directory $> | 1
+cat > ls1 < ls2\nls	crash_check	bash: ls2: No such file or directory $> ls1  [...] $> | 1 0
+>>hola\ncat hola	diff	$> | 0 0
+echo hola > bonjour\ncat < bonjour	diff	hola $> | 0 0
+echo hola >bonjour\ncat <bonjour	diff	hola $> | 0 0
+echo hola>bonjour\ncat<bonjour	diff	hola $> | 0 0
+echo hola> bonjour\ncat< bonjour	diff	hola $> | 0 0
+echo hola               >bonjour\ncat<                     bonjour	diff	hola $> | 0 0
+echo hola          >     bonjour\ncat            <         bonjour	diff	hola $> | 0 0
+echo hola > srcs/bonjour\ncat < srcs/bonjour	diff	hola $> | 0 0
+echo hola >srcs/bonjour\ncat <srcs/bonjour	diff	hola $> | 0 0
+e'c'"h"o hola > bonjour\ncat 'bo'"n"jour	diff	hola $> | 0 0
+echo hola > bonjour\\ 1\nls\ncat bonjour\\ 1	diff	bonjour 1' [...] $> hola $> | 0 0 0
+echo hola > bonjour hey\nls\ncat bonjour\ncat hey	diff	bonjour [...] $> hola hey $> cat: hey: No such file or directory $> | 0 0 0 1
+echo hola > srcs/bonjour\necho hey > srcs/hello\n>srcs/bonjour >srcs/hello <prout\ncat srcs/bonjour srcs/hello	crash_check	bash: prout: No such file or directory $> $> | 0 0 1 0
+echo hola > srcs/bonjour\necho hey > srcs/hello\nrm srcs/bonjour srcs/hello\n>srcs/bonjour >srcs/hello <prout\nls srcs\ncat srcs/bonjour srcs/hello	crash_check	bash: prout: No such file or directory $> bonjour  hello $> $> | 0 0 0 1 0 0
+echo hola > srcs/bonjour\necho hey > srcs/hello\n>srcs/bonjour <prout >srcs/hello \ncat srcs/bonjour \ncat srcs/hello	crash_check	bash: prout: No such file or directory $> $> hey $> | 0 0 1 0 0
+echo hola > srcs/bonjour\necho hey > srcs/hello\nrm srcs/bonjour srcs/hello\n>srcs/bonjour <prout >srcs/hello \nls srcs\ncat srcs/bonjour	crash_check	bash: prout: No such file or directory $> bonjour $> $> | 0 0 0 1 0 0
+echo hola > ../bonjour\necho hey > ../hello\n>../bonjour >../hello <prout\ncat ../bonjour ../hello	crash_check	bash: prout: No such file or directory $> $> | 0 0 1 0
+echo hola > ../bonjour\necho hey > ../hello\nrm ../bonjour ../hello\n>../bonjour >../hello <prout\nls ..\ncat ../bonjour ../hello	crash_check	bash: prout: No such file or directory $> bonjour  hello $> $> | 0 0 0 1 0 0
+echo hola > ../bonjour\necho hey > ../hello\n>../bonjour <prout >../hello \ncat ../bonjour \ncat ../hello	crash_check	bash: prout: No such file or directory $> $> hey $> | 0 0 1 0 0
+echo hola > ../bonjour\necho hey > ../hello\nrm ../bonjour ../hello\n>../bonjour <prout >../hello \nls ..\ncat ../bonjour	crash_check	bash: prout: No such file or directory $> bonjour $> $> | 0 0 0 1 0 0
+echo hola > srcs/bonjour\necho hey > srcs/hello\n>srcs/bonjour >>srcs/hello <prout\ncat srcs/bonjour \ncat srcs/hello	crash_check	bash: prout: No such file or directory $> $> hey $> | 0 0 1 0 0
+echo hola > srcs/bonjour\necho hey > srcs/hello\n>>srcs/bonjour >srcs/hello <prout\ncat srcs/bonjour \ncat srcs/hello	crash_check	bash: prout: No such file or directory $> bonjour $> $> | 0 0 1 0 0
+echo hola > srcs/bonjour\necho hey > srcs/hello\n>>srcs/bonjour >>srcs/hello <prout\ncat srcs/bonjour \ncat srcs/hello	crash_check	bash: prout: No such file or directory $> bonjour $> hey $> | 0 0 1 0 0
+echo hola > srcs/bonjour\necho hey > srcs/hello\n>srcs/bonjour <prout >>srcs/hello\ncat srcs/bonjour \ncat srcs/hello	crash_check	bash: prout: No such file or directory $> $> hey $> | 0 0 1 0 0
+echo hola > srcs/bonjour\necho hey > srcs/hello\n>>srcs/bonjour <prout >srcs/hello\ncat srcs/bonjour \ncat srcs/hello	crash_check	bash: prout: No such file or directory $> bonjour $> hey $> | 0 0 1 0 0
+echo hola > srcs/bonjour\necho hey > srcs/hello\n>>srcs/bonjour <prout >>srcs/hello\ncat srcs/bonjour \ncat srcs/hello	crash_check	bash: prout: No such file or directory $> bonjour $> hey $> | 0 0 1 0 0
+echo hola > srcs/bonjour\necho hey > srcs/hello\n<prout >>srcs/bonjour >>srcs/hello\ncat srcs/bonjour \ncat srcs/hello	crash_check	bash: prout: No such file or directory $> bonjour $> hey $> | 0 0 1 0 0
+echo hola > bonjour\necho hey > hello\n<bonjour >hello\ncat bonjour \ncat hello	diff	hola $> >> | 0 0 0 0 0
+echo hola > bonjour\necho hey > hello\n>bonjour >hello < prout\ncat bonjour \ncat hello	crash_check	bash: prout: No such file or directory $> $> $> | 0 0 1 0 0
+echo hola > bonjour\necho hey > hello\nrm bonjour hello\n>bonjour >hello < prout\ncat bonjour \ncat hello	crash_check	bash: prout: No such file or directory $> $> $> | 0 0 0 1 0 0
+echo hola > bonjour\necho hey > hello\n>bonjour <prout hello\ncat bonjour \ncat hello	crash_check	bash: prout: No such file or directory $> $> hey $> | 0 0 1 0 0
+echo hola > bonjour\necho hey > hello\nrm bonjour hello\n>bonjour <prout hello\ncat bonjour	crash_check	bash: prout: No such file or directory $> $> | 0 0 0 1 0 | Le fichier hello n'existe pas
+echo hola > bonjour\n<bonjour cat | wc > bonjour\ncat bonjour	diff	0       0       0 $> | 0 0 0
+rm -f bonjour\nrm bonjour > bonjour\nls -l bonjour	diff	ls: cannot access 'bonjour': No such file or directory | 0 0 2
+export HOLA="bonjour hello"\n>$HOLA\nls	diff	'bonjour hello' [...] $> | 0 0 0
+export HOLA="bonjour hello"\n>"$HOLA"\nls	diff	'bonjour hello' [...] $> | 0 0 0
+export HOLA="bonjour hello"\n>$"HOLA"\nls	diff	HOLA [...] $> | 0 0 0
+export HOLA="bonjour hello"\n>$HOLA>hey\nls	diff	'bonjour hello' hey [...] $> | 0 0 0
+export HOLA="bonjour hello"\n>hey>$HOLA\nls	diff	'bonjour hello' hey [...] $> | 0 0 0
+export HOLA="bonjour hello"\n>hey>$HOLA>hey>hey\nls	diff	'bonjour hello' hey [...] $> | 0 0 0
+export A=hey\nexport A B=Hola D E C="Que Tal"\necho $PROUT$B$C > /tmp/a > /tmp/b > /tmp/c\ncat /tmp/a\ncat /tmp/b\ncat /tmp/c	diff	$> $> $> HolaQue Tal $> | 0 0 0 0 0 0
+<a cat <b <c	crash_check	Prout $> | 0
+<a cat <b <c\ncat a\ncat b\ncat c	crash_check	$> $> $> Amour Tu es Horrible 0123456789 Prout $> | 0 0 0 0
+>a ls >b >>c >d\ncat a\ncat b\ncat c\ncat d	diff	$> $> $> Prout $> crashtest.c Docs [...] test.c $> | 0 0 0 0 0
+echo hola > a > b > c\ncat a\ncat b\ncat c	diff	$> $> hola $> | 0
+mkdir dir\nls -la > dir/bonjour\ncat dir/bonjour	diff	total 16 drwx------  2 vietdu91 [...] . drwxrwxewt 51 root     [...] .. [...] $> | 0
+<a\ncat a	crash_check	Amour Tu es Horrible $> | 0
+>d cat <a >>e\ncat a\ncat d\ncat e	crash_check	$> Amour $> Amour $> | 0 0 0 0
+< a > b cat > hey >> d\ncat d\nls	crash_check	Amour Tu Es Horrible $> [...] a b hey d | 0 0 0

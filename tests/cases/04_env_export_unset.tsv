@@ -1,0 +1,158 @@
+# command	mode	note
+env	diff	... PATH=... $> | 0
+env hola	diff	env: ʻhola’: No such file or directory $> | 127
+env hola que tal	diff	env: ʻhola’: No such file or directory $> | 127
+env env	diff	... PATH=... $> | 0 | Affiche une seule fois env
+env env env env env	diff	... PATH=... $> | 0 | Affiche une seule fois env
+env ls	diff	crashtest.c  Docs  Dockers  Drawings  Makefile  minishell  philosophers  srcs  test.c $> | 0
+env ./Makefile	diff	env: ‘./Makefile’: Permission denied $> | 126
+export HOLA=bonjour\nenv	diff	... HOLA=bonjour $> | 0 0
+export       HOLA=bonjour\nenv	diff	... HOLA=bonjour $> | 0 0
+export	diff	... export PATH="..." $> | 0 | Les variables sont triees par ordre alphabetique On n'oublie pas les doubles quotes qui designent les strings attribues a chaque variable
+export Hola\nexport	diff	... export HOME="/home/vietdu91" export Hola export PATH="..." $> | 0 0 | Hola n'existe pas dans env mais il existe dans export
+export Hola9hey\nexport	diff	... export HOME="/home/vietdu91" export Hola9hey export PATH="..." $> | 0 0
+export $DONTEXIST	diff	... export HOME="/home/vietdu91" export PATH="..." $> | 0 | Le cas ou la variable n'existe pas et n'est pas importee
+export | grep "HOME"	diff	export HOME="/home/vietdu91" $> | 0
+export ""	diff	bash: export: `': not a valid identifier $> | 1
+export =	diff	bash: export: ʻ=': not a valid identifier $> | 1
+export %	diff	bash: export: ʻ%': not a valid identifier $> | 1
+export $?	diff	bash: export: `0': not a valid identifier $> | 1
+export ?=2	diff	bash: export: ʻ?=2': not a valid identifier $> | 1
+export 9HOLA=	diff	bash: export: ʻ9HOLA=': not a valid identifier $> | 1
+export HOLA9=bonjour\nenv	diff	... HOLA9=bonjour $> | 0 0
+export _HOLA=bonjour\nenv	diff	... _HOLA=bonjour $> | 0 0
+export ___HOLA=bonjour\nenv	diff	... ___HOLA=bonjour $> | 0 0
+export _HO_LA_=bonjour\nenv	diff	... _HO_LA_=bonjour $> | 0 0
+export HOL@=bonjour	diff	bash: export: ʻHOL@=bonjour’: not a valid identifier $> | 1 | Cas où le nom de variable ne contient pas de lettres, ni de chiffres, ni d'underscores
+export HOL\\~A=bonjour	diff	bash: export: `HOL~A=bonjour': not a valid identifier $> | 1
+export -HOLA=bonjour	diff	bash: export: -H: invalid option | 2
+export --HOLA=bonjour	diff	bash: export: --: invalid option | 2
+export HOLA-=bonjour	diff	bash: export: `HOLA-=bonjour': not a valid identifier $> | 1
+export HO-LA=bonjour	diff	bash: export: `HO-LA=bonjour': not a valid identifier $> | 1
+export HOL.A=bonjour	diff	bash: export: `HOL.A=bonjour': not a valid identifier $> | 1
+export HOL\\\\\\$A=bonjour	diff	bash: export: `HOL\$A=bonjour': not a valid identifier $> | 1
+export HO\\\\\\\\LA=bonjour	diff	bash: export: `HO\\LA=bonjour': not a valid identifier $> | 1
+export HOL}A=bonjour	diff	bash: export: `HOL}A=bonjour': not a valid identifier $> | 1
+export HOL{A=bonjour	diff	bash: export: `HOL{A=bonjour': not a valid identifier $> | 1
+export HO*LA=bonjour	diff	bash: export: `HO*LA=bonjour': not a valid identifier $> | 1
+export HO#LA=bonjour	diff	bash: export: `HO#LA=bonjour': not a valid identifier $> | 1
+export HO@LA=bonjour	diff	bash: export: `HO@LA=bonjour': not a valid identifier $> | 1
+export HO!LA=bonjour	diff	bash: !LA=bonjour: event not found | 0
+export HO$?LA=bonjour\nenv	diff	... HO0LA=bonjour $> | 0
+export +HOLA=bonjour	diff	bash: export: `+HOLA=bonjour': not a valid identifier $> | 1
+export HOL+A=bonjour	diff	bash: export: `HOL+A=bonjour': not a valid identifier $> | 1
+export HOLA+=bonjour\nenv	diff	... HOLA=bonjour $> | 0
+export HOLA=bonjour\nexport HOLA+=bonjour\nenv	diff	... HOLA=bonjourbonjour $> | 0 | += s'ajoute au contenu de la variable
+exportHOLA=bonjour\nenv	diff	... PATH=... $> | 0
+export HOLA =bonjour	diff	bash: export: ʻ=bonjour’: not a valid identifier $> | 1
+export HOLA = bonjour	diff	bash: export: ʻ=': not a valid identifier $> | 1
+export HOLA=bon jour\nenv	diff	... HOLA=bon $> | 0
+export HOLA= bonjour\nenv	diff	... HOLA= $> | 0
+export HOLA=bonsoir\nexport HOLA=bonretour\nexport HOLA=bonjour\nenv	diff	... HOLA=bonjour $> | 0 0 0
+export HOLA=$HOME\nenv	diff	... HOLA=/home/vietdu91 $> | 0 0
+export HOLA=bonjour$HOME\nenv	diff	... HOLA=bonjour/home/vietdu91 $> | 0 0
+export HOLA=$HOMEbonjour\nenv	diff	... HOLA= $> | 0 0
+export HOLA=bon$jour\nenv	diff	... HOLA=bon $> | 0 0 | Le cas où la variable "$jour" n'existe pas
+export HOLA=bon\\jour\nenv	diff	... HOLA=bonjour $> | 0 0
+export HOLA=bon\\\\jour\nenv	diff	... HOLA=bon\jour $> | 0 0
+export HOLA=bon(jour	diff	bash: syntax error near unexpected token `(' $> | 2 | Marche pour les caractères : ()
+export HOLA=bon()jour	diff	bash: syntax error near unexpected token `(' $> | 2
+export HOLA=bon&jour	diff	bash: jour: command not found $> | 127 | Marche pour les caractères : &|
+export HOLA=bon@jour\nenv	diff	$> env ... HOLA=bon@jour $> | 0
+export HOLA=bon;jour\nenv	diff	bash: jour: command not found $> env ... HOLA=bon $> | 127 0
+export HOLA=bon!jour	diff	bash: !jour: event not found $> | 1
+export HOLA=bon"jour"\nenv	diff	... HOLA=bonjour PATH=... $> | 0 0
+export HOLA$USER=bonjour\nenv	diff	... HOLAvietdu91=bonjour PATH=... $> | 0 0
+export HOLA=bonjour=casse-toi\necho $HOLA	diff	HOLA=bonjour=casse-toi $> | 0 0
+export "HOLA=bonjour"=casse-toi\necho $HOLA	diff	HOLA=bonjour=casse-toi $> | 0 0
+export HOLA=bonjour\nexport BYE=casse-toi\necho $HOLA et $BYE	diff	bonjour et casse-toi $> | 0 0 0
+export HOLA=bonjour BYE=casse-toi\necho $HOLA et $BYE	diff	bonjour et casse-toi $> | 0 0
+export $HOLA=bonjour\nenv	diff	... bonjour=bonjour PATH=... $> | 0
+export HOLA="bonjour      "  \necho $HOLA | cat -e	diff	bonjour$ $> | 0
+export HOLA="   -n bonjour   "  \necho $HOLA	diff	bonjour$> | 0
+export HOLA="bonjour   "/\necho $HOLA	diff	bonjour / $> | 0
+export HOLA='"'\necho " $HOLA " | cat -e	diff	" $ $> | 0
+export HOLA=at\nc$HOLA Makefile	diff	[cela affiche le Makefile] $> | 0
+export "" HOLA=bonjour\nenv	diff	bash: export: `": not a valid identifier $> env ... HOLA=bonjour $> | 1
+export HOLA="cat Makefile | grep NAME"  \necho $HOLA	diff	cat Makefile | grep NAME $> | 0
+export HOLA=hey \necho $HOLA$HOLA$HOLA=hey$HOLA	diff	heyheyhey=heyhey $> | 0
+export HOLA="  bonjour  hey  "  \necho $HOLA | cat -e	diff	bonjour hey$ $> | 0 0
+export HOLA="  bonjour  hey  "  \necho """$HOLA""" | cat -e	diff	bonjour    hey    $ $> | 0 0
+export HOLA="  bonjour  hey  "  \necho wesh"$HOLA" | cat -e	diff	wesh   bonjour    hey    $ $> | 0 0
+export HOLA="  bonjour  hey  "  \necho wesh""$HOLA.	diff	wesh bonjour hey . $> | 0 0 | /!\ Bien supprimer les espaces en trop au debut et a la fin du string d'export
+export HOLA="  bonjour  hey  "  \necho wesh$""HOLA.	diff	weshHOLA. $> | 0 0
+export HOLA="  bonjour  hey  "  \necho wesh$"HOLA HOLA".	diff	weshHOLA HOLA. $> | 0 0
+export HOLA=bonjour\nexport HOLA=" hola et $HOLA"\necho $HOLA	diff	hola et bonjour $> | 0 0 0
+export HOLA=bonjour\nexport HOLA=' hola et $HOLA'\necho $HOLA	diff	hola et $HOLA $> | 0 0 0
+export HOLA=bonjour\nexport HOLA=" hola et $HOLA"$HOLA\necho $HOLA	diff	hola et bonjourbonjour $> | 0 0 0
+export HOLA="ls        -l    - a"\necho $HOLA	diff	ls -l - a $> | 0 0
+export HOLA="s -la" \nl$HOLA	diff	total 16 drwx------  2 vietdu91 [...] . drwxrwxewt 51 root     [...] .. -rwxr-xr-x  8 vietdu91 [...] crashtest.c [...] $> | 0 0
+export HOLA="s -la" \nl"$HOLA"	diff	bash: ls -la: command not found $> | 127
+export HOLA="s -la" \nl'$HOLA'	diff	bash: l$HOLA: command not found $> | 127
+export HOLA="l" \n$HOLAs	diff	$> | 0
+export HOLA="l" \n"$HOLA"s	diff	crashtest.c  Docs  Dockers  Drawings  Makefile  minishell  philosophers  srcs  test.c $> | 0
+export HOL=A=bonjour\nenv	diff	... HOL=A=bonjour $> | 0
+export HOLA="l" \n'$HOLA's	diff	bash: $HOLAs: command not found $> | 127
+export HOL=A=""\nenv	diff	... HOL=A= $> | 0 0
+export TE+S=T\nenv	diff	bash: export: `TE+S=T': not a valid identifier $> | 1
+export ""=""	diff	bash: export: `=': not a valid identifier $> | 1
+export ''=''	diff	bash: export: `=': not a valid identifier $> | 1
+export "="="="	diff	bash: export: `===': not a valid identifier $> | 1
+export '='='='	diff	bash: export: `===': not a valid identifier $> | 1
+export HOLA=p\nexport BYE=w\n$HOLA"BYE"d	diff	bash: pBYEd: command not found $> | 127
+export HOLA=p\nexport BYE=w\n"$HOLA"'$BYE'd	diff	bash: p$BYEd: command not found $> | 127
+export HOLA=p\nexport BYE=w\n"$HOLA""$BYE"d	diff	/home/vietdu91/42_works/minishell | 0
+export HOLA=p\nexport BYE=w\n$"HOLA"$"BYE"d	diff	bash: HOLABYEd: command not found $> | 127
+export HOLA=p\nexport BYE=w\n$'HOLA'$'BYE'd	diff	bash: HOLABYEd: command not found $> | 127
+export HOLA=-n\n"echo $HOLA" hey	diff	bash: echo -n: command not found $> | 127
+export A=1 B=2 C=3 D=4 E=5 F=6 G=7 H=8\necho "$A'$B"'$C"$D'$E'"$F'"'$G'$H"	diff	1'2$C"$D5"$F'7'8 $> | 0 0
+export HOLA=bonjour\nenv\nunset HOLA\nenv	diff	... PATH=... $> | 0 0 0 0
+export HOLA=bonjour\nenv\nunset HOLA\nunset HOLA\nenv	diff	... PATH=... $> | 0 0 0 0 0
+unset PATH\necho $PATH	diff	$> | 0 0
+unset PATH\nls	diff	bash: ls: No such file or directory | 127
+unset ""	diff	bash: unset: `': not a valid identifier $> | 1
+unset INEXISTANT	diff	$> | 0 | Cas où la variable n'existe pas
+unset PWD\nenv | grep PWD\npwd	diff	$> $> /home/vietdu91/42_works/minishell $> | 0 0 0
+pwd\nunset PWD\nenv | grep PWD\ncd $PWD\npwd	diff	/home/vietdu91/42_works/minishell $> $> $> /home/vietdu91 | 0 0 0 0 0
+unset OLDPWD\nenv | grep OLDPWD	diff	$> $> | 0 0
+unset 9HOLA	diff	bash: unset: `9HOLA': not a valid identifier $> | 1
+unset HOLA9	diff	$> | 0
+unset HOL?A	diff	bash: unset: `HOL?A': not a valid identifier $> | 1
+unset HOLA HOL?A	diff	bash: unset: `HOL?A': not a valid identifier $> | 1 | Il unset bien HOLA
+unset HOL?A HOLA	diff	bash: unset: `HOL?A': not a valid identifier $> | 1 | Il unset bien HOLA
+unset HOL?A HOL.A	diff	bash: unset: `HOL?A': not a valid identifier bash: unset: `HOL.A': not a valid identifier $> | 1
+unset HOLA=	diff	bash: unset: `HOLA=': not a valid identifier $> | 1
+unset HOL\\\\\\\\A	diff	bash: unset: `HOL\\A': not a valid identifier | 1
+unset HOL;A	diff	bash: A: command not found | 127
+unset HOL.A	diff	bash: unset: `HOL.A': not a valid identifier | 1
+unset HOL+A	diff	bash: unset: `HOL+A': not a valid identifier | 1
+unset HOL=A	diff	bash: unset: `HOL=A': not a valid identifier | 1
+unset HOL{A	diff	bash: unset: `HOL{A': not a valid identifier | 1
+unset HOL}A	diff	bash: unset: `HOL}A': not a valid identifier | 1
+unset HOL-A	diff	bash: unset: `HOL-A': not a valid identifier | 1
+unset -HOLA	diff	bash: unset: -H: invalid option | 2
+unset _HOLA	diff	$> | 0
+unset HOL_A	diff	$> | 0
+unset HOLA_	diff	$> | 0
+unset HOL*A	diff	bash: unset: `HOL*A': not a valid identifier | 1
+unset HOL#A	diff	bash: unset: `HOL#A': not a valid identifier | 1
+unset $HOLA	diff	$> | 0 | Il va unset le contenu de $HOLA, c'est-a-dire la variable bonjour
+unset $PWD	diff	bash: unset: `/home/vietdu91/42_works/minishell': not a valid identifier | 1
+unset HOL@	diff	bash: unset: `HOL@': not a valid identifier | 1
+unset HOL!A	diff	bash: !A: event not found | 1
+unset HOL^A	diff	bash: unset: `HOL^A': not a valid identifier | 1
+unset HOL$?A	diff	$> | 0 | Unset prend en compte le contenu de $?, c'est-a-dire qu'il lit HOL0A ou HOL127A
+unset HOL\\~A	diff	bash: unset: `HOL~': not a valid identifier | 1
+unset "" HOLA\nenv | grep HOLA	diff	bash: unset: `': not a valid identifier $> $> | 1 0 | HOLA sera quand meme unset !!
+unset PATH\ncat Makefile	diff	bash: cat: No such file or directory $> | 0 1
+unset =	diff	bash: unset: `=': not a valid identifier | 0
+unset ======	diff	bash: unset: `======': not a valid identifier | 0
+unset ++++++	diff	bash: unset: `++++++': not a valid identifier | 0
+unset _______	diff	$> | 0
+unset export	diff	$> | 0
+unset echo	diff	$> | 0
+unset pwd	diff	$> | 0
+unset cd	diff	$> | 0
+unset unset	diff	$> | 0
+unset sudo	diff	$> | 0
+export hola | unset hola | echo $?	diff	0 $> | 0

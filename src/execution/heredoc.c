@@ -1,74 +1,34 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   heredoc.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: abdunass <marvin@42.fr>                  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/30 00:00:00 by abdunass        #+#    #+#             */
-/*   Updated: 2026/07/30 00:00:00 by abdunass       ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+
 
 #include "minishell.h"
 
-#define HEREDOC_TMP "/tmp/.minishell_heredoc"
-
-static int	is_delim(const char *line, const char *delim)
+static int	resolve(const char *delim, int want_expand, t_shell *shell)
 {
-	return (ft_strlen(line) == ft_strlen(delim)
-		&& ft_strncmp(line, delim, ft_strlen(delim) + 1) == 0);
-}
-
-// static void	write_line(int fd, char *line, int want_expand, t_shell *shell)
-// {
-// 	char	*out;
-
-// 	if (want_expand)
-// 		out = expand_fragment(line, shell);
-// 	else
-// 		out = ft_strdup(line);
-// 	write(fd, out, ft_strlen(out));
-// 	write(fd, "\n", 1);
-// 	free(out);
-// }
-
-static int	heredoc_body(const char *delim, int want_expand, t_shell *shell)
-{
-	int		red;
+	int		pipefd[2];
 	char	*line;
 
-	// fd = open(HEREDOC_TMP, O_CREAT | O_WRONLY | O_TRUNC, 0600);
-	// if (fd == -1)
-	// 	return (-1);
-	// line = readline("> ");
-	// while (line && !is_delim(line, delim))
-	// {
-	// 	write_line(fd, line, want_expand, shell);
-	// 	free(line);
-	// 	line = readline("> ");
-	// }
-	// free(line);
-	// close(fd);
-	// fd = open(HEREDOC_TMP, O_RDONLY);
-	// unlink(HEREDOC_TMP);
-	(void)want_expand;
-	(void)shell;
-	line = malloc(2048 * sizeof(line));
-	if (!line)
+	if (pipe(pipefd) == -1)
 		return (-1);
-	while (line && !is_delim(line, delim))
+	while (1)
 	{
-		red = 0;
-		write(0, ">", 1);
-		line = get_next_line(STDIN_FILENO);
-		if (line == NULL)
+		line = heredoc_line();
+		if (!line)
+		{
+			if (g_signal == SIGINT)
+				return (close(pipefd[0]), close(pipefd[1]), -1);
+			warn_eof(delim);
 			break ;
+		}
+		if (is_delim(line, delim))
+			return (free(line), close(pipefd[1]), pipefd[0]);
+		write_line(pipefd[1], line, want_expand, shell);
+		free(line);
 	}
-	return (red);
+	close(pipefd[1]);
+	return (pipefd[0]);
 }
 
-static void	resolve_cmd_heredocs(t_cmd *cmd, t_shell *shell)
+static int	resolve_cmd_heredocs(t_cmd *cmd, t_shell *shell)
 {
 	t_redir	*redir;
 
@@ -76,19 +36,31 @@ static void	resolve_cmd_heredocs(t_cmd *cmd, t_shell *shell)
 	while (redir)
 	{
 		if (redir->type == REDIR_HEREDOC)
-			heredoc_body(redir->target->value, redir->heredoc_expand, shell);
+		{
+			redir->heredoc_fd = resolve(redir->target->value,
+					redir->heredoc_expand, shell);
+			if (redir->heredoc_fd == -1)
+				return (-1);
+		}
 		redir = redir->next;
 	}
+	return (0);
 }
 
-void	resolve_heredocs(t_shell *shell)
+int	resolve_heredocs(t_shell *shell)
 {
 	t_cmd	*cmd;
+	int		status;
 
+	g_signal = 0;
+	init_signals_heredoc();
+	status = 0;
 	cmd = shell->pipeline;
-	while (cmd)
+	while (cmd && status == 0)
 	{
-		resolve_cmd_heredocs(cmd, shell);
+		status = resolve_cmd_heredocs(cmd, shell);
 		cmd = cmd->next;
 	}
+	init_signals();
+	return (status);
 }

@@ -1,0 +1,15 @@
+# command	mode	note
+chmod 000 minishell\n./minishell	crash_check	bash: ./minishell : Permission denied $> | 126
+ls hola	diff	ls: cannot access 'hola': No such file or directory $> | 2
+./Makefile	diff	bash: ./Makefile: Permission denied $> | 126
+./minishell	crash_check	$> | 0 | Relance le Minishell Il faut donc 2 fois exit pour exit
+env | grep SHLVL\n./minishell\nenv | grep SHLVL\nexit\nenv | grep SHLVL	crash_check	$> | 0 0 0 0 0
+touch hola\n./hola	diff	bash: ./hola: Permission denied $> | 126
+env|"wc" -l	diff	66 $> | 0
+env|"wc "-l	diff	bash: wc -l: command not found $> | 127
+expr 1 + 1	diff	2 $> | 0
+expr $? + $?	diff	0 $> | 0 | Fait la somme de la valeur de $?
+env -i ./minishell\nenv	crash_check	PWD=/mnt/nfs/homes/emtran/Desktop/42_minishell SHLVL=1 _=/usr/bin/env $> | 0
+env -i ./minishell\nexport	crash_check	export OLDPWD export PWD="/mnt/nfs/homes/emtran/Desktop/42_minishell" export SHLVL="1" $> | 0
+env -i ./minishell\ncd	crash_check	bash: cd: HOME not set $> | 1
+env -i ./minishell\ncd ~	crash_check	$> | 0 | /home/vietdu91
