@@ -58,14 +58,15 @@ static t_token	*parse_bare_segment(char *line, int *i)
 	start = *i;
 	while (segment_continues(line, *i) && line[*i] != '\''
 		&& line[*i] != '"')
-		{
-			if (line[*i] == '(')
-				open = 1;
-			if (line[*i] == ')')
-				close = 1;
-			(*i)++;
-		}
-	return (new_token(TOKEN_WORD, ft_substr(line, start, *i - start), open, close));
+	{
+		if (line[*i] == '(')
+			open = 1;
+		if (line[*i] == ')')
+			close = 1;
+		(*i)++;
+	}
+	line = ft_substr(line, start, *i - start);
+	return (new_token(TOKEN_WORD, line, open, close));
 }
 
 t_token	*make_word_token(const char *line, int *i, int *error)

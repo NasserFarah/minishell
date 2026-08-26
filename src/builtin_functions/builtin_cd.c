@@ -28,7 +28,6 @@ static int	minus(t_shell *shell, char *target)
 	char	cwd[4096];
 
 	target = env_get(shell->env, "OLDPWD");
-	printf("here1\n");
 	if (!target)
 	{
 		ft_putstr_fd("minishell: cd: OLDPWD not set\n", STDERR_FILENO);
@@ -42,7 +41,6 @@ static int	minus(t_shell *shell, char *target)
 		return (1);
 	}
 	update_pwd(shell, cwd);
-	printf("here\n");
 	return (0);
 }
 

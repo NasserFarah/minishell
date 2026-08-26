@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strdplicate.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fnasser <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/08/26 00:29:47 by fnasser           #+#    #+#             */
+/*   Updated: 2026/08/26 00:33:40 by fnasser          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	*ft_strdup(const char *s)
@@ -6,7 +18,7 @@ char	*ft_strdup(const char *s)
 	int		i;
 	int		len;
 
-    if (s == NULL)
+	if (s == NULL)
 		return (NULL);
 	len = 0;
 	while (s[len] != '\0')

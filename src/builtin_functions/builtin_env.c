@@ -15,10 +15,21 @@
 int	builtin_env(t_cmd *cmd, t_shell *shell)
 {
 	t_env	*cur;
+	int		flag;
 
 	(void)cmd;
+	flag = 0;
 	cur = shell->env;
 	while (cur)
+	{
+		if ((ft_strncmp(cur->key, "PATH", 5) == 0) && cur->value != NULL)
+			flag = 1;
+		cur = cur->next;
+	}
+	if (flag == 0)
+		write(2, "bash: env: No such file or directory\n", 37);
+	cur = shell->env;
+	while (cur && flag)
 	{
 		if (cur->key && cur->value)
 		{

@@ -63,7 +63,7 @@ static int	brace_syntax(t_token *tokens)
 		if (tokens->open == 1 || tokens->close == 1)
 		{
 			ft_putstr_fd("minishell: syntax error near unexpected token `",
-		STDERR_FILENO);
+				STDERR_FILENO);
 			if (tokens->open == 1)
 				ft_putstr_fd("(", STDERR_FILENO);
 			else

@@ -1,6 +1,6 @@
 NAME		= minishell
 CC			= cc
-CFLAGS		= -Wall -Wextra -Werror -g
+CFLAGS		= -Wall -Wextra -Werror -g -g3
 RM			= rm -f
 
 SRCDIR		= src
@@ -75,6 +75,4 @@ fclean: clean
 
 re: fclean all
 
-test: fclean all clean
-
-.PHONY: all clean fclean re test
+.PHONY: all clean fclean re

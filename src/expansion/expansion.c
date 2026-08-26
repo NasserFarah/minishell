@@ -28,11 +28,11 @@ static void	expand_cmd_args(t_cmd *cmd, t_shell *shell)
 {
 	t_token	*old;
 	t_token	*word;
-	t_token	*new_args;
+	t_token	*tmp;
 	int		is_export;
 
 	old = cmd->args;
-	new_args = NULL;
+	tmp = NULL;
 	is_export = 0;
 	if (old && ft_strncmp(old->value, "export", 7) == 0)
 		is_export = 1;
@@ -40,13 +40,13 @@ static void	expand_cmd_args(t_cmd *cmd, t_shell *shell)
 	{
 		word = take_word(&old);
 		expand_fragments(word, shell);
-		if (is_export && new_args && is_assignment_word(word))
-			add_token_back(&new_args, new_token(TOKEN_WORD, join_word(word), 0, 0));
+		if (is_export && tmp && is_assignment_word(word))
+			add_token_back(&tmp, new_token(TOKEN_WORD, join_word(word), 0, 0));
 		else
-			add_token_back(&new_args, split_word(word));
+			add_token_back(&tmp, split_word(word));
 		free_tokens(word);
 	}
-	cmd->args = new_args;
+	cmd->args = tmp;
 }
 
 void	expand(t_shell *shell)

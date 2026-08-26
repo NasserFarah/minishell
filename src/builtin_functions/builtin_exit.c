@@ -50,6 +50,7 @@ static int	exit_code_mod(const char *s, t_shell *shell)
 	i = 0;
 	neg = 0;
 	val = 0;
+	j = 0;
 	if (s[i] == '+' || s[i] == '-')
 	{
 		j = 1;
