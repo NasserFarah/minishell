@@ -40,9 +40,11 @@ static void	free_split(char **arr)
 
 static int	try_candidate(char *candidate, int *exit_code)
 {
+	struct stat	st;
+
 	if (!candidate)
 		return (0);
-	if (access(candidate, F_OK) != 0)
+	if (stat(candidate, &st) != 0 || !S_ISREG(st.st_mode))
 	{
 		free(candidate);
 		return (0);

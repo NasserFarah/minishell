@@ -53,6 +53,7 @@ int	consume_redir(t_token **tokens, t_redir **redirs)
 	redir->target = take_word(tokens);
 	redir->heredoc_expand = 1;
 	redir->heredoc_fd = -1;
+	redir->ambiguous = 0;
 	redir->next = NULL;
 	append_redir(redirs, redir);
 	return (1);

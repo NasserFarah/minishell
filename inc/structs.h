@@ -56,6 +56,7 @@ typedef struct s_redir
 	t_token			*target;
 	int				heredoc_expand;
 	int				heredoc_fd;
+	int				ambiguous;
 	struct s_redir	*next;
 }	t_redir;
 

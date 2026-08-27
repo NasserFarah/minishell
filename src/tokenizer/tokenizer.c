@@ -49,23 +49,21 @@ static t_token	*make_operator_token(const char *line, int *i)
 	return (new_token(TOKEN_REDIR_OUT, NULL, 0, 0));
 }
 
-static int	next_token(const char *line, int *i, t_token **head)
+static int	next_token(const char *line, int *i, t_token **head, int *error)
 {
 	t_token	*part;
-	int		error;
 
-	error = 0;
 	if (is_operator_char(line[*i]))
 		part = make_operator_token(line, i);
 	else
-		part = make_word_token(line, i, &error);
+		part = make_word_token(line, i, error);
 	if (!part)
 		return (1);
 	add_token_back(head, part);
 	return (0);
 }
 
-t_token	*tokenize(const char *line)
+t_token	*tokenize(const char *line, int *error)
 {
 	t_token	*head;
 	int		i;
@@ -77,7 +75,7 @@ t_token	*tokenize(const char *line)
 		skip_spaces(line, &i);
 		if (!line[i])
 			break ;
-		if (next_token(line, &i, &head))
+		if (next_token(line, &i, &head, error))
 		{
 			free_tokens(head);
 			return (NULL);

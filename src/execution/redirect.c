@@ -21,6 +21,13 @@ static int	redir_flags(t_redir_type type)
 	return (O_WRONLY | O_CREAT | O_TRUNC);
 }
 
+static int	ambiguous_redirect(t_redir *redir)
+{
+	ft_putstr_fd((char *)redir->target->value, STDERR_FILENO);
+	ft_putstr_fd(": ambiguous redirect\n", STDERR_FILENO);
+	return (-1);
+}
+
 static int	apply_one_redir(t_redir *redir)
 {
 	int	fd;
@@ -31,6 +38,8 @@ static int	apply_one_redir(t_redir *redir)
 		close(redir->heredoc_fd);
 		return (0);
 	}
+	if (redir->ambiguous)
+		return (ambiguous_redirect(redir));
 	fd = open(redir->target->value, redir_flags(redir->type), 0644);
 	if (fd == -1)
 	{

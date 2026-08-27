@@ -23,6 +23,16 @@ static void	update_pwd(t_shell *shell, char *oldpwd)
 	}
 }
 
+static int	cd_error(const char *target)
+{
+	ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
+	ft_putstr_fd((char *)target, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
+	ft_putstr_fd(strerror(errno), STDERR_FILENO);
+	ft_putstr_fd("\n", STDERR_FILENO);
+	return (1);
+}
+
 static int	minus(t_shell *shell, char *target)
 {
 	char	cwd[4096];
@@ -36,10 +46,7 @@ static int	minus(t_shell *shell, char *target)
 	if (!getcwd(cwd, 4096))
 		cwd[0] = '\0';
 	if (chdir(target) == -1)
-	{
-		perror("minishell: cd");
-		return (1);
-	}
+		return (cd_error(target));
 	ft_putstr_fd((char *)target, STDOUT_FILENO);
 	write(1, "\n", 1);
 	update_pwd(shell, cwd);
@@ -48,10 +55,12 @@ static int	minus(t_shell *shell, char *target)
 
 static int	lone(char *cwd, const char *target, t_shell *shell)
 {
+	if (!*target)
+		return (0);
 	if (!getcwd(cwd, 4096))
 		cwd[0] = '\0';
 	if (chdir(target) == -1)
-		return (perror("minishell: cd"), 1);
+		return (cd_error(target));
 	update_pwd(shell, cwd);
 	return (0);
 }
@@ -73,13 +82,13 @@ int	builtin_cd(t_cmd *cmd, t_shell *shell)
 	if (cmd->args->next == NULL)
 		return (lone(oldpwd, target, shell));
 	if (cmd->args->next->next)
-		return (ft_putstr_fd("bash: cd: too many arguments\n", 2), 1);
+		return (ft_putstr_fd("minishell: cd: too many arguments\n", 2), 1);
 	if (ft_strncmp("-", target, 2) == 0)
 		return (minus(shell, target));
 	if (!getcwd(oldpwd, sizeof(oldpwd)))
 		oldpwd[0] = '\0';
 	if (chdir(target) == -1)
-		return (perror("minishell: cd"), 1);
+		return (cd_error(target));
 	update_pwd(shell, oldpwd);
 	return (0);
 }

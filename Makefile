@@ -29,6 +29,7 @@ SRCS		= src/main/main.c \
 			  src/parser/parser_utils.c \
 			  src/expansion/expansion.c \
 			  src/expansion/expand_var.c \
+			  src/expansion/expand_var_utils.c \
 			  src/expansion/expand_split.c \
 			  src/expansion/expand_redirs.c \
 			  src/expansion/tilde.c \

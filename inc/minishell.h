@@ -63,7 +63,7 @@ void		env_unset(t_env **env, const char *key);
 void		env_append_new(t_env **env, const char *key, const char *value);
 
 // tokenizer
-t_token		*tokenize(const char *line);
+t_token		*tokenize(const char *line, int *error);
 t_token		*new_token(t_token_type type, char *value, int open, int close);
 t_token		*make_word_token(const char *line, int *i, int *error);
 void		add_token_back(t_token **head, t_token *new);
@@ -88,6 +88,7 @@ char		*join_word(t_token *word);
 void		expand_cmd_redirs(t_cmd *cmd, t_shell *shell);
 char		*tilde_expansion(char *word, t_shell *shell);
 char		*tilde_expand_assign(char *value, t_shell *shell);
+char		*special_var(char c, t_shell *shell);
 
 // execution
 void		execute(t_shell *shell);

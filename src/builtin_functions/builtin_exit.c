@@ -40,6 +40,21 @@ static int	non_numeric_exit(t_shell *shell, const char *arg)
 	return (2);
 }
 
+static int	is_overflow(const char *digits, int digit_count, int neg)
+{
+	const char	*bound;
+
+	if (digit_count > 19)
+		return (1);
+	if (digit_count < 19)
+		return (0);
+	if (neg)
+		bound = "9223372036854775808";
+	else
+		bound = "9223372036854775807";
+	return (ft_strncmp(digits, bound, 19) > 0);
+}
+
 static int	exit_code_mod(const char *s, t_shell *shell)
 {
 	int	i;
@@ -62,8 +77,8 @@ static int	exit_code_mod(const char *s, t_shell *shell)
 		val = (val * 10 + (s[i] - '0')) % 256;
 		i++;
 	}
-	if ((i > 19 && !neg) || (i > 20 && j))
-		non_numeric_exit(shell, s);
+	if (is_overflow(s + j, i - j, neg))
+		return (non_numeric_exit(shell, s));
 	if (neg)
 		val = -val;
 	return (((val % 256) + 256) % 256);

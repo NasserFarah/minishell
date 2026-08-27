@@ -28,10 +28,10 @@ static char	*dollar_replacement(const char *s, int *i, t_shell *shell)
 	char	*name;
 	char	*value;
 
-	if (s[*i + 1] == '?')
+	if (s[*i + 1] == '?' || s[*i + 1] == '$')
 	{
 		*i += 2;
-		return (ft_itoa(shell->exit_status));
+		return (special_var(s[*i - 1], shell));
 	}
 	if (!is_var_start(s[*i + 1]))
 	{
