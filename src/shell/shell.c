@@ -53,9 +53,6 @@ void	shell_loop(t_shell *shell)
 			break ;
 	}
 	rl_clear_history();
-	clear_history();
-	rl_free_line_state();
-	rl_cleanup_after_signal();
 }
 
 void	free_shell(t_shell *shell)

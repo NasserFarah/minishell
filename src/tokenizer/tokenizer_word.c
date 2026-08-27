@@ -56,6 +56,8 @@ static t_token	*parse_bare_segment(char *line, int *i)
 	int	close;
 
 	start = *i;
+	open = 0;
+	close = 0;
 	while (segment_continues(line, *i) && line[*i] != '\''
 		&& line[*i] != '"')
 	{

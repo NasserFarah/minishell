@@ -37,7 +37,10 @@ static void	shlvl(t_shell *shell)
 
 static void	init_shell(t_shell *shell, char **envp)
 {
+	static char	c[4096];
+
 	shell->env = env_init(envp);
+	env_set(&shell->env, "PWD", getcwd(c, 4096));
 	shell->exit_status = 0;
 	shell->interactive = isatty(STDIN_FILENO);
 	shell->should_exit = 0;

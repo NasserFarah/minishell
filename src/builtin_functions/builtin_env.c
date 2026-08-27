@@ -12,6 +12,13 @@
 
 #include "minishell.h"
 
+static void	prnt_env(t_env *cur)
+{
+	ft_putstr_fd(cur->key, STDOUT_FILENO);
+	ft_putchar_fd('=', STDOUT_FILENO);
+	ft_putendl_fd(cur->value, STDOUT_FILENO);
+}
+
 int	builtin_env(t_cmd *cmd, t_shell *shell)
 {
 	t_env	*cur;
@@ -32,11 +39,7 @@ int	builtin_env(t_cmd *cmd, t_shell *shell)
 	while (cur && flag)
 	{
 		if (cur->key && cur->value)
-		{
-			ft_putstr_fd(cur->key, STDOUT_FILENO);
-			ft_putchar_fd('=', STDOUT_FILENO);
-			ft_putendl_fd(cur->value, STDOUT_FILENO);
-		}
+			prnt_env(cur);
 		cur = cur->next;
 	}
 	return (0);

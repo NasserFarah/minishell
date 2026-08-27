@@ -40,6 +40,8 @@ static int	minus(t_shell *shell, char *target)
 		perror("minishell: cd");
 		return (1);
 	}
+	ft_putstr_fd((char *)target, STDOUT_FILENO);
+	write(1, "\n", 1);
 	update_pwd(shell, cwd);
 	return (0);
 }

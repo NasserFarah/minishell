@@ -36,8 +36,8 @@ static int	non_numeric_exit(t_shell *shell, const char *arg)
 	ft_putstr_fd((char *)arg, STDERR_FILENO);
 	ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
 	shell->should_exit = 1;
-	shell->exit_status = 255;
-	return (255);
+	shell->exit_status = 2;
+	return (2);
 }
 
 static int	exit_code_mod(const char *s, t_shell *shell)
@@ -80,13 +80,13 @@ int	builtin_exit(t_cmd *cmd, t_shell *shell)
 		shell->should_exit = 1;
 		return (shell->exit_status);
 	}
+	if (!is_numeric(arg->value))
+		return (non_numeric_exit(shell, arg->value));
 	if (arg->next)
 	{
 		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
 		return (1);
 	}
-	if (!is_numeric(arg->value))
-		return (non_numeric_exit(shell, arg->value));
 	shell->should_exit = 1;
 	shell->exit_status = exit_code_mod(arg->value, shell);
 	return (shell->exit_status);
