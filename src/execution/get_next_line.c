@@ -53,33 +53,41 @@ static char	*init(int fd, char **line)
 	return (*line);
 }
 
-char	*get_next_line(int fd)
+static char	*split_current(char **line)
 {
-	static char	*line;
-	char		*nextline;
-	char		*current;
+	char	*current;
+	char	*nextline;
 
-	line = init(fd, &line);
-	if (!line)
-		return (NULL);
-	if (ft_strchr(line, '\n'))
+	if (ft_strchr(*line, '\n'))
 	{
-		current = ft_substr(line, 0, ft_strchr(line, '\n') - line + 1);
-		nextline = ft_strduplicate(ft_strchr(line, '\n') + 1);
+		current = ft_substr(*line, 0, ft_strchr(*line, '\n') - *line + 1);
+		nextline = ft_strduplicate(ft_strchr(*line, '\n') + 1);
 		if (!nextline || !current)
-			return (free(line), free(current), NULL);
-		free(line);
-		line = nextline;
+			return (free(*line), free(current), NULL);
+		free(*line);
+		*line = nextline;
 	}
 	else
 	{
-		current = ft_strduplicate(line);
+		current = ft_strduplicate(*line);
 		if (!current)
-			return (free(line), NULL);
-		free(line);
-		line = NULL;
+			return (free(*line), NULL);
+		free(*line);
+		*line = NULL;
 	}
 	return (current);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*line;
+
+	if (fd == -1)
+		return (free(line), line = NULL, NULL);
+	line = init(fd, &line);
+	if (!line)
+		return (NULL);
+	return (split_current(&line));
 }
 // #include <stdio.h>
 // #include <fcntl.h>

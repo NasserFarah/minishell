@@ -118,6 +118,16 @@ strip_exit_notice() {
     grep -v '^exit$' <<< "$1"
 }
 
+# $_ (last-argument tracking) is invocation-chain-dependent: this script
+# invokes both shells through `timeout`, and what $_ starts out as depends
+# on details of that invocation chain that have nothing to do with whether
+# minishell's own $_ logic is correct (verified separately, live, elsewhere
+# this session). Strip any "declare -x _=..." export line before comparing,
+# same idea as strip_exit_notice above.
+strip_underscore_line() {
+    grep -v '^declare -x _=' <<< "$1"
+}
+
 # ---------------------------------------------------------------------------
 # Test registration
 # ---------------------------------------------------------------------------
@@ -148,8 +158,8 @@ t() {
     local b_exit b_out m_exit m_out
     b_exit=$(cat "$CAPTURE/.b_exit" 2>/dev/null || echo "?")
     m_exit=$(cat "$CAPTURE/.m_exit" 2>/dev/null || echo "?")
-    b_out=$(cat "$CAPTURE/.b_out" 2>/dev/null)
-    m_out=$(strip_exit_notice "$(cat "$CAPTURE/.m_out" 2>/dev/null)")
+    b_out=$(strip_underscore_line "$(cat "$CAPTURE/.b_out" 2>/dev/null)")
+    m_out=$(strip_underscore_line "$(strip_exit_notice "$(cat "$CAPTURE/.m_out" 2>/dev/null)")")
 
     if [ "$b_exit" = "$m_exit" ] && [ "$b_out" = "$m_out" ]; then
         PASSED=$((PASSED + 1))
@@ -495,6 +505,9 @@ t "Environment variables" "an undefined variable expands to nothing" 'echo [$thi
 t "Environment variables" "double quotes still interpolate \$" $'export TESTVAR=hello\necho "value: $TESTVAR"'
 t "Environment variables" "\$USER is set and expands" $'export USER=tester\necho $USER'
 t "Environment variables" "\$? expands to the last exit status" $'/bin/ls /nope 2>/dev/null\necho $?'
+t "Environment variables" "\$_ is the last argument of the previous command" $'echo a b\necho $_'
+t "Environment variables" "\$_ falls back to the command name with no arguments" $'true\necho $_'
+t "Environment variables" "\$_ is not updated across a pipeline" $'echo first\necho a b | grep b\necho $_'
 
 # ---------------------------------------------------------------------------
 # Bonus (only run with -b/--bonus; the eval sheet says to ignore these

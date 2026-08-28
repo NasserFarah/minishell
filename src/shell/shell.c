@@ -14,25 +14,16 @@
 
 char	*get_last_last_arg(t_shell *shell)
 {
-	t_cmd	*pipeline;
 	t_token	*args;
 
-	pipeline = shell->pipeline;
-	if (!pipeline)
+	if (!shell->pipeline || shell->pipeline->next)
 		return (NULL);
-	while (pipeline)
+	args = shell->pipeline->args;
+	while (args)
 	{
-		if (pipeline->next == NULL)
-		{
-			args = pipeline->args;
-			while (args)
-			{
-				if (args->next == NULL)
-					return (args->value);
-				args = args->next;
-			}
-		}
-		pipeline = pipeline->next;
+		if (args->next == NULL)
+			return (args->value);
+		args = args->next;
 	}
 	return (NULL);
 }
@@ -96,4 +87,5 @@ void	shell_loop(t_shell *shell)
 void	free_shell(t_shell *shell)
 {
 	free_env(shell->env);
+	get_next_line(-1);
 }
