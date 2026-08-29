@@ -71,10 +71,16 @@ void	shell_loop(t_shell *shell)
 
 	while (1)
 	{
+		g_signal = 0;
 		if (shell->interactive)
 			line = read_interactive_line(prompt);
 		else
 			line = read_noninteractive_line();
+		if (g_signal == SIGINT)
+		{
+			shell->exit_status = 130;
+			g_signal = 0;
+		}
 		if (!line)
 			break ;
 		process_line(shell, line);
