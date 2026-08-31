@@ -76,3 +76,26 @@ void	env_unset(t_env **env, const char *key)
 		cur = cur->next;
 	}
 }
+
+void	shlvl(t_shell *shell)
+{
+	char	*shlvl;
+	int		lvl;
+
+	shlvl = env_get(shell->env, "SHLVL");
+	if (!shlvl)
+		lvl = 1;
+	else
+	{
+		lvl = ft_atoi(shlvl);
+		if (lvl < 0)
+			lvl = 0;
+		lvl++;
+	}
+	shlvl = ft_itoa(lvl);
+	if (shlvl)
+	{
+		env_set(&shell->env, "SHLVL", shlvl);
+		free(shlvl);
+	}
+}

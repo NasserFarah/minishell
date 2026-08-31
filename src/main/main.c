@@ -12,39 +12,27 @@
 
 #include "minishell.h"
 
-static void	shlvl(t_shell *shell)
+static void	art(void)
 {
-	char	*shlvl;
-	int		lvl;
-
-	shlvl = env_get(shell->env, "SHLVL");
-	if (!shlvl)
-		lvl = 1;
-	else
-	{
-		lvl = ft_atoi(shlvl);
-		if (lvl < 0)
-			lvl = 0;
-		lvl++;
-	}
-	shlvl = ft_itoa(lvl);
-	if (shlvl)
-	{
-		env_set(&shell->env, "SHLVL", shlvl);
-		free(shlvl);
-	}
-}
-
-static void	init_shell(t_shell *shell, char **argv, char **envp)
-{
-	static char	c[4096];
-
-	(void)argv;
-	shell->env = env_init(envp);
-	env_set(&shell->env, "PWD", getcwd(c, 4096));
-	shell->exit_status = 0;
-	shell->interactive = isatty(STDIN_FILENO);
-	shell->should_exit = 0;
+	printf("\n");
+	printf("%s%s%s\n", PINK,
+		"███╗   ███╗██╗███╗   ██╗██╗       ██╗  ██╗███████╗██╗\t  ██╗", RESET);
+	printf("%s%s%s\n", PINK,
+		"████╗ ████║██║████╗  ██║██║       ██║  ██║██╔════╝██║\t  ██║", RESET);
+	printf("%s%s%s\n", PINK2,
+		"██╔████╔██║██║██╔██╗ ██║██║ ████╗ ███████║█████╗  ██║\t  ██║", RESET);
+	printf("%s%s%s\n", PINK,
+		"██║╚██╔╝██║██║██║╚██╗██║██║ ╚═══╝ ██╔══██║██╔══╝  ██║\t  ██║", RESET);
+	printf("%s%s%s\n", PINK,
+		"██║ ╚═╝ ██║██║██║ ╚████║██║\t  ██║  ██║███████╗███████╗███████╗",
+		RESET);
+	printf("%s%s%s\n", PINK,
+		"╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝       ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝",
+		RESET);
+	printf("%s%s%s\n", PINK2, "\t\t  Done by Abdullah && Farah", RESET);
+	printf("\n");
+	printf("%s    NO BASH WAS HARMED IN THE MAKING OF THIS SHELL!%s\n",
+		PINK, RESET);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -55,6 +43,8 @@ int	main(int argc, char **argv, char **envp)
 	init_shell(&shell, argv, envp);
 	shlvl(&shell);
 	init_signals();
+	if (shell.interactive)
+		art();
 	shell_loop(&shell);
 	free_shell(&shell);
 	return (shell.exit_status);

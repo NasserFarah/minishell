@@ -89,3 +89,51 @@ char	*get_next_line(int fd)
 		return (NULL);
 	return (split_current(&line));
 }
+// #include <stdio.h>
+// #include <fcntl.h>
+// int	main(int ac, char **av)
+// {
+// 	if (ac && av)
+//  	{
+//  		int fd = open("file.txt", O_RDONLY);
+// 		char *curr;
+// 		while ((curr = get_next_line(fd)))
+// 		{
+// 			if (!curr)
+// 			{
+// 				free(curr);
+// 				printf("...");
+// 				break;
+// 			}
+//  			printf("%s", curr);
+// 			free(curr);
+// 		}
+// 		// free(curr);
+// 		// printf("%s", curr);
+// 		// printf("%s", curr);
+// 		// printf("%s", curr);
+// 		// printf("%s", curr);
+// 		// printf("%s", curr);
+// 		// printf("%s", curr);
+// 		// printf("%s", curr);
+// 		// free (curr);
+//  		close(fd);
+//  	}
+//  	return (0);
+// }
+/*int	main(int ac, char **av)
+{
+ 	char *result;
+ 	int i = 0;
+ 	if (ac && av)
+ 	{
+  		int fd = open("file.txt", O_RDONLY);
+  		while ((result = get_next_line(fd)) != NULL)
+ 		{
+  			printf("Line %d: %s", ++i, result);
+  			free(result);
+  		}
+  		close(fd);
+  	}
+  	return (0);
+}*/

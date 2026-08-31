@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abdunass <marvin@42.fr>                  +#+  +:+       +#+        */
+/*   By: fnasser <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/27 22:43:27 by abdunass        #+#    #+#             */
-/*   Updated: 2026/08/21 00:16:04 by fnasser          ###   ########.fr       */
+/*   Created: 2026/08/28 03:51:51 by fnasser           #+#    #+#             */
+/*   Updated: 2026/08/28 03:51:56 by fnasser          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,12 @@
 
 # define PROMPT_GREEN "\001\033[1;32m\002"
 # define PROMPT_RESET "\001\033[0m\002"
+# define RESET   "\033[0m"
+# define PINK    "\033[38;5;205m"
+# define PINK2   "\033[38;5;218m"
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 6
+#  define BUFFER_SIZE 4096
 # endif
 
 # include <stdio.h>
@@ -47,6 +50,7 @@ void		shell_loop(t_shell *shell);
 void		free_shell(t_shell *shell);
 char		*read_interactive_line(char *prompt);
 char		*read_noninteractive_line(void);
+void		init_shell(t_shell *shell, char **argv, char **envp);
 
 // signals
 void		init_signals(void);
@@ -56,6 +60,7 @@ void		signals_child_default(void);
 
 // env
 t_env		*env_init(char **envp);
+void		shlvl(t_shell *shell);
 void		free_env(t_env *env);
 char		*env_get(t_env *env, const char *key);
 void		env_set(t_env **env, const char *key, const char *value);
@@ -96,6 +101,8 @@ char		*ft_strduplicate(const char *s);
 char		*resolve_executable(const char *cmd, t_env *env, int *exit_code);
 char		**build_argv(t_token *args);
 char		**build_envp(t_env *env);
+void		free_envp(char **envp);
+int			report_exec_error(const char *path);
 int			apply_redirs(t_redir *redirs);
 int			resolve_heredocs(t_shell *shell);
 void		close_heredoc_fds(t_cmd *pipeline);

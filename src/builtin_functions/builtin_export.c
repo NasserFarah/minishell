@@ -31,11 +31,42 @@ static void	env_set_no_eq(t_env **env, const char *key)
 	env_append_new(env, key, value);
 }
 
+static int	export_append(t_shell *shell, const char *name, const char *value)
+{
+	char	*old;
+	char	*joined;
+
+	if (!is_valid_name(name))
+		return (0);
+	old = env_get(shell->env, name);
+	if (old)
+		joined = ft_strjoin(old, value);
+	else
+		joined = ft_strdup(value);
+	env_set(&shell->env, name, joined);
+	free(joined);
+	return (1);
+}
+
+static int	try_append(t_shell *shell, const char *arg, char *eq)
+{
+	char	*name;
+	int		ok;
+
+	name = ft_substr(arg, 0, eq - arg - 1);
+	ok = export_append(shell, name, eq + 1);
+	free(name);
+	return (ok);
+}
+
 static int	export_one(t_shell *shell, const char *arg)
 {
 	char	*eq;
 	char	*name;
 
+	eq = ft_strchr(arg, '=');
+	if (eq && eq > arg && eq[-1] == '+' && try_append(shell, arg, eq))
+		return (1);
 	if (!is_valid_name(arg))
 	{
 		ft_putstr_fd("minishell: export: `", STDERR_FILENO);
@@ -43,7 +74,6 @@ static int	export_one(t_shell *shell, const char *arg)
 		ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
 		return (0);
 	}
-	eq = ft_strchr(arg, '=');
 	if (eq)
 	{
 		name = ft_substr(arg, 0, eq - arg);

@@ -12,35 +12,14 @@
 
 #include "minishell.h"
 
-char	*get_last_last_arg(t_shell *shell)
-{
-	t_token	*args;
-
-	if (!shell->pipeline || shell->pipeline->next)
-		return (NULL);
-	args = shell->pipeline->args;
-	while (args)
-	{
-		if (args->next == NULL)
-			return (args->value);
-		args = args->next;
-	}
-	return (NULL);
-}
-
 static void	run_tokens(t_shell *shell)
 {
-	char	*last_arg;
-
 	shell->pipeline = parse(&shell->tokens);
 	if (shell->pipeline)
 	{
 		expand(shell);
 		execute(shell);
 	}
-	last_arg = get_last_last_arg(shell);
-	if (last_arg != NULL)
-		env_set(&shell->env, "_", last_arg);
 	free_cmd(shell->pipeline);
 	shell->pipeline = NULL;
 }
@@ -83,6 +62,8 @@ void	shell_loop(t_shell *shell)
 		}
 		if (!line)
 			break ;
+		if (ft_strlen(line) == 0)
+			shell->exit_status = 0;
 		process_line(shell, line);
 		if (shell->should_exit)
 			break ;

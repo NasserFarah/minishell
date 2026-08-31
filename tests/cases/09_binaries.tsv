@@ -1,5 +1,0 @@
-# command	mode	note
-/bin/echo	diff	$> | 0
-/bin/echo Hola Que Tal	diff	Hola Que Tal $> | 0
-/bin/env	diff	... PATH=... $> | 0
-/bin/cd Desktop	diff	bash: /bin/cd: No such file or directory | 127

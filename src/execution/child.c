@@ -1,18 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   child.c                                          :+:      :+:    :+:   */
+/*   child.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abdunass <marvin@42.fr>                  +#+  +:+       +#+        */
+/*   By: fnasser <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/30 00:00:00 by abdunass        #+#    #+#             */
-/*   Updated: 2026/07/30 00:00:00 by abdunass       ###   ########.fr       */
+/*   Created: 2026/08/28 03:53:14 by fnasser           #+#    #+#             */
+/*   Updated: 2026/08/28 03:53:16 by fnasser          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	child_fail(const char *name, int code)
+static void	child_exit(t_child *ctx, int code)
+{
+	free_cmd(ctx->shell->pipeline);
+	free_env(ctx->shell->env);
+	free_pipeline(ctx->pl);
+	get_next_line(-1);
+	exit(code);
+}
+
+static void	child_fail(t_child *ctx, const char *name, int code)
 {
 	if (code == 127)
 	{
@@ -22,58 +31,49 @@ static void	child_fail(const char *name, int code)
 	}
 	else
 		perror(name);
-	exit(code);
+	child_exit(ctx, code);
 }
 
-static void	exec_fail(const char *name)
+static void	exec_fail(t_child *ctx, char *path, char **argv, char **envp)
 {
-	struct stat	st;
+	int	code;
 
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putstr_fd((char *)name, STDERR_FILENO);
-	if ((errno == EACCES || errno == EISDIR)
-		&& stat(name, &st) == 0 && S_ISDIR(st.st_mode))
-	{
-		ft_putstr_fd(": Is a directory\n", STDERR_FILENO);
-		exit(126);
-	}
-	if (errno == ENOENT)
-	{
-		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
-		exit(127);
-	}
-	if (errno == EACCES)
-	{
-		ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
-		exit(126);
-	}
-	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putstr_fd(strerror(errno), STDERR_FILENO);
-	ft_putstr_fd("\n", STDERR_FILENO);
-	exit(126);
+	code = report_exec_error(path);
+	free(path);
+	free(argv);
+	free_envp(envp);
+	child_exit(ctx, code);
+}
+
+static void	prepare_child(t_pipeline *pl, int idx)
+{
+	signals_child_default();
+	wire_pipes(pl, idx);
+	close_pipes(pl);
 }
 
 void	run_child(t_cmd *cmd, t_shell *shell, t_pipeline *pl, int idx)
 {
+	t_child	ctx;
 	char	*path;
 	char	**argv;
 	char	**envp;
 	int		code;
 
-	signals_child_default();
-	wire_pipes(pl, idx);
-	close_pipes(pl);
+	ctx.shell = shell;
+	ctx.pl = pl;
+	prepare_child(pl, idx);
 	if (apply_redirs(cmd->redirs) == -1)
-		exit(1);
+		child_exit(&ctx, 1);
 	if (!cmd->args)
-		exit(0);
+		child_exit(&ctx, 0);
 	if (is_builtin(cmd->args->value))
-		exit(run_builtin(cmd, shell));
+		child_exit(&ctx, run_builtin(cmd, shell));
 	path = resolve_executable(cmd->args->value, shell->env, &code);
 	if (!path)
-		child_fail(cmd->args->value, code);
+		child_fail(&ctx, cmd->args->value, code);
 	argv = build_argv(cmd->args);
 	envp = build_envp(shell->env);
 	execve(path, argv, envp);
-	exec_fail(path);
+	exec_fail(&ctx, path, argv, envp);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abdunass <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: fnasser <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/27 22:43:27 by abdunass          #+#    #+#             */
-/*   Updated: 2026/07/27 22:43:27 by abdunass         ###   ########.fr       */
+/*   Created: 2026/08/28 03:52:00 by fnasser           #+#    #+#             */
+/*   Updated: 2026/08/28 03:52:04 by fnasser          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,5 +90,11 @@ typedef struct s_pipeline
 	int		*pipes;
 	pid_t	*pids;
 }	t_pipeline;
+
+typedef struct s_child
+{
+	t_shell		*shell;
+	t_pipeline	*pl;
+}	t_child;
 
 #endif

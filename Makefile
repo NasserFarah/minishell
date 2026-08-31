@@ -42,6 +42,7 @@ SRCS		= src/main/main.c \
 			  src/execution/heredoc_utils.c \
 			  src/execution/pipeline.c \
 			  src/execution/child.c \
+			  src/execution/exec_error.c \
 			  src/execution/wait_status.c \
 			  src/execution/standalone.c \
 			  src/execution/ft_strdplicate.c \

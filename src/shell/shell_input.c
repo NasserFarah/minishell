@@ -45,8 +45,6 @@ char	*read_interactive_line(char *prompt)
 {
 	char	*line;
 
-	if (!getcwd(prompt, 4096))
-		return (NULL);
 	build_prompt(prompt);
 	line = readline(prompt);
 	if (!line)
@@ -57,4 +55,24 @@ char	*read_interactive_line(char *prompt)
 	if (*line)
 		add_history(line);
 	return (line);
+}
+
+void	init_shell(t_shell *shell, char **argv, char **envp)
+{
+	static char	c[4096];
+	char		*pat;
+
+	(void)argv;
+	pat = malloc(BUFFER_SIZE * sizeof(pat));
+	ft_strlcpy(pat,
+		"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+		BUFFER_SIZE);
+	shell->env = env_init(envp);
+	env_set(&shell->env, "PWD", getcwd(c, 4096));
+	if (!env_get(shell->env, "PATH"))
+		env_set(&shell->env, "PATH", pat);
+	shell->exit_status = 0;
+	shell->interactive = isatty(STDIN_FILENO);
+	shell->should_exit = 0;
+	free(pat);
 }
