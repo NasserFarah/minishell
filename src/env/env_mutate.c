@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_mutate.c                                     :+:      :+:    :+:   */
+/*   env_mutate.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abdunass <marvin@42.fr>                  +#+  +:+       +#+        */
+/*   By: fnasser <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/30 00:00:00 by abdunass        #+#    #+#             */
-/*   Updated: 2026/07/30 00:00:00 by abdunass       ###   ########.fr       */
+/*   Created: 2026/08/31 23:08:30 by fnasser           #+#    #+#             */
+/*   Updated: 2026/08/31 23:08:34 by fnasser          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,14 +84,14 @@ void	shlvl(t_shell *shell)
 
 	shlvl = env_get(shell->env, "SHLVL");
 	if (!shlvl)
-		lvl = 1;
+		lvl = 0;
 	else
 	{
 		lvl = ft_atoi(shlvl);
 		if (lvl < 0)
 			lvl = 0;
-		lvl++;
 	}
+	lvl++;
 	shlvl = ft_itoa(lvl);
 	if (shlvl)
 	{

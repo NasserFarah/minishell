@@ -6,22 +6,11 @@
 /*   By: fnasser <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/21 22:45:03 by fnasser           #+#    #+#             */
-/*   Updated: 2026/08/21 22:45:07 by fnasser          ###   ########.fr       */
+/*   Updated: 2026/09/02 22:10:00 by fnasser          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	update_pwd(t_shell *shell, char *oldpwd)
-{
-	char	newpwd[4096];
-
-	if (getcwd(newpwd, 4096))
-	{
-		env_set(&shell->env, "OLDPWD", oldpwd);
-		env_set(&shell->env, "PWD", newpwd);
-	}
-}
 
 static int	cd_error(const char *target)
 {
@@ -33,62 +22,77 @@ static int	cd_error(const char *target)
 	return (1);
 }
 
-static int	minus(t_shell *shell, char *target)
+static int	cd_step(t_shell *shell, const char *target, char **out)
 {
-	char	cwd[4096];
+	char	*abs;
+	char	*canon;
 
-	target = env_get(shell->env, "OLDPWD");
-	if (!target)
+	abs = cd_absolute(shell, target);
+	canon = cd_canonical(abs);
+	if (canon && chdir(canon) == 0)
 	{
-		ft_putstr_fd("minishell: cd: OLDPWD not set\n", STDERR_FILENO);
-		return (1);
+		free(abs);
+		*out = canon;
+		return (0);
 	}
-	if (!getcwd(cwd, 4096))
-		cwd[0] = '\0';
+	free(canon);
 	if (chdir(target) == -1)
-		return (cd_error(target));
-	ft_putstr_fd((char *)target, STDOUT_FILENO);
-	write(1, "\n", 1);
-	update_pwd(shell, cwd);
+		return (free(abs), cd_error(target));
+	*out = cd_resolve_pwd(abs);
 	return (0);
 }
 
-static int	lone(char *cwd, const char *target, t_shell *shell)
+static int	cd_apply(t_shell *shell, const char *target)
 {
-	if (!*target)
-		return (0);
-	if (!getcwd(cwd, 4096))
-		cwd[0] = '\0';
-	if (chdir(target) == -1)
-		return (cd_error(target));
-	update_pwd(shell, cwd);
+	char	*newpwd;
+	char	*oldpwd;
+
+	newpwd = NULL;
+	if (cd_step(shell, target, &newpwd) != 0)
+		return (1);
+	oldpwd = shell->cwd;
+	shell->cwd = newpwd;
+	if (oldpwd)
+		env_set(&shell->env, "OLDPWD", oldpwd);
+	if (newpwd)
+		env_set(&shell->env, "PWD", newpwd);
+	free(oldpwd);
 	return (0);
+}
+
+static int	cd_minus(t_shell *shell)
+{
+	char	*target;
+	int		status;
+
+	target = env_get(shell->env, "OLDPWD");
+	if (!target)
+		return (ft_putstr_fd("minishell: cd: OLDPWD not set\n", 2), 1);
+	target = ft_strduplicate(target);
+	if (!target)
+		return (1);
+	status = cd_apply(shell, target);
+	free(target);
+	if (status == 0 && shell->cwd)
+		ft_putendl_fd(shell->cwd, STDOUT_FILENO);
+	return (status);
 }
 
 int	builtin_cd(t_cmd *cmd, t_shell *shell)
 {
 	char	*target;
-	char	oldpwd[4096];
 
-	if (cmd->args && cmd->args->next)
+	if (cmd->args->next && cmd->args->next->next)
+		return (ft_putstr_fd("minishell: cd: too many arguments\n", 2), 1);
+	if (cmd->args->next)
 		target = cmd->args->next->value;
 	else
 		target = env_get(shell->env, "HOME");
 	if (!target)
-	{
-		ft_putstr_fd("minishell: cd: HOME not set\n", STDERR_FILENO);
-		return (1);
-	}
-	if (cmd->args->next == NULL)
-		return (lone(oldpwd, target, shell));
-	if (cmd->args->next->next)
-		return (ft_putstr_fd("minishell: cd: too many arguments\n", 2), 1);
-	if (ft_strncmp("-", target, 2) == 0)
-		return (minus(shell, target));
-	if (!getcwd(oldpwd, sizeof(oldpwd)))
-		oldpwd[0] = '\0';
-	if (chdir(target) == -1)
-		return (cd_error(target));
-	update_pwd(shell, oldpwd);
-	return (0);
+		return (ft_putstr_fd("minishell: cd: HOME not set\n", 2), 1);
+	if (!*target)
+		return (0);
+	if (ft_strncmp(target, "-", 2) == 0)
+		return (cd_minus(shell));
+	return (cd_apply(shell, target));
 }

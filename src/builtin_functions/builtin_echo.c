@@ -21,7 +21,7 @@ static int	is_echo_n_flag(const char *s)
 	i = 1;
 	while (s[i] == 'n')
 		i++;
-	return (s[i] == '\0');
+	return (1);
 }
 
 int	builtin_echo(t_cmd *cmd, t_shell *shell)

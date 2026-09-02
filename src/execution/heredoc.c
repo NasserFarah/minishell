@@ -12,30 +12,42 @@
 
 #include "minishell.h"
 
-static int	resolve(const char *delim, int want_expand, t_shell *shell)
+static int	fill_heredoc(int fd, const char *delim, int want_expand,
+		t_shell *shell)
 {
-	int		pipefd[2];
 	char	*line;
 
-	if (pipe(pipefd) == -1)
-		return (-1);
 	while (1)
 	{
 		line = heredoc_line();
 		if (!line)
 		{
 			if (g_signal == SIGINT)
-				return (close(pipefd[0]), close(pipefd[1]), -1);
+				return (-1);
 			warn_eof(delim);
-			break ;
+			return (0);
 		}
 		if (is_delim(line, delim))
-			return (free(line), close(pipefd[1]), pipefd[0]);
-		write_line(pipefd[1], line, want_expand, shell);
+			return (free(line), 0);
+		write_line(fd, line, want_expand, shell);
 		free(line);
 	}
-	close(pipefd[1]);
-	return (pipefd[0]);
+}
+
+static int	resolve(const char *delim, int want_expand, t_shell *shell)
+{
+	char	path[64];
+	int		fd;
+
+	fd = open_heredoc_file(path, sizeof(path));
+	if (fd == -1)
+		return (-1);
+	if (fill_heredoc(fd, delim, want_expand, shell) == -1)
+		return (close(fd), unlink(path), -1);
+	close(fd);
+	fd = open(path, O_RDONLY);
+	unlink(path);
+	return (fd);
 }
 
 static int	resolve_cmd_heredocs(t_cmd *cmd, t_shell *shell)

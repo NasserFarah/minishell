@@ -49,7 +49,10 @@ char	*tilde_expansion(char *word, t_shell *shell)
 	prefix = tilde_prefix(word);
 	value = expand_tilde_prefix(prefix, shell);
 	if (!value)
-		result = word;
+	{
+		result = ft_strdup("/home");
+		free(word);
+	}
 	else
 	{
 		result = ft_strjoin(value, word + ft_strlen(prefix));

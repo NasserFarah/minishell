@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   shell.c                                          :+:      :+:    :+:   */
+/*   shell.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abdunass <marvin@42.fr>                  +#+  +:+       +#+        */
+/*   By: fnasser <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/27 22:43:27 by abdunass        #+#    #+#             */
-/*   Updated: 2026/07/27 22:43:27 by abdunass       ###   ########.fr       */
+/*   Created: 2026/08/31 23:10:32 by fnasser           #+#    #+#             */
+/*   Updated: 2026/08/31 23:10:35 by fnasser          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	shell_loop(t_shell *shell)
 	{
 		g_signal = 0;
 		if (shell->interactive)
-			line = read_interactive_line(prompt);
+			line = read_interactive_line(shell, prompt);
 		else
 			line = read_noninteractive_line();
 		if (g_signal == SIGINT)
@@ -62,8 +62,6 @@ void	shell_loop(t_shell *shell)
 		}
 		if (!line)
 			break ;
-		if (ft_strlen(line) == 0)
-			shell->exit_status = 0;
 		process_line(shell, line);
 		if (shell->should_exit)
 			break ;
@@ -74,5 +72,6 @@ void	shell_loop(t_shell *shell)
 void	free_shell(t_shell *shell)
 {
 	free_env(shell->env);
+	free(shell->cwd);
 	get_next_line(-1);
 }

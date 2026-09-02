@@ -48,7 +48,7 @@ extern int	g_signal;
 // shell
 void		shell_loop(t_shell *shell);
 void		free_shell(t_shell *shell);
-char		*read_interactive_line(char *prompt);
+char		*read_interactive_line(t_shell *shell, char *prompt);
 char		*read_noninteractive_line(void);
 void		init_shell(t_shell *shell, char **argv, char **envp);
 
@@ -109,6 +109,7 @@ void		close_heredoc_fds(t_cmd *pipeline);
 int			is_delim(const char *line, const char *delim);
 void		warn_eof(const char *delim);
 char		*heredoc_line(void);
+int			open_heredoc_file(char *path, size_t size);
 void		write_line(int fd, char *line, int want_expand, t_shell *shell);
 t_pipeline	*build_pipeline(int n_cmds);
 void		wire_pipes(t_pipeline *pl, int idx);
@@ -125,6 +126,10 @@ int			is_valid_name(const char *s);
 int			builtin_echo(t_cmd *cmd, t_shell *shell);
 int			builtin_pwd(t_cmd *cmd, t_shell *shell);
 int			builtin_cd(t_cmd *cmd, t_shell *shell);
+char		*cd_canonical(const char *abs);
+char		*cd_absolute(t_shell *shell, const char *target);
+char		*cd_resolve_pwd(char *fallback);
+void		getcwd_error(const char *who);
 int			builtin_env(t_cmd *cmd, t_shell *shell);
 int			builtin_export(t_cmd *cmd, t_shell *shell);
 void		print_export(t_env *env);

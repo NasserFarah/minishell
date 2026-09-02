@@ -53,6 +53,7 @@ SRCS		= src/main/main.c \
 			  src/builtin_functions/builtin_echo.c \
 			  src/builtin_functions/builtin_pwd.c \
 			  src/builtin_functions/builtin_cd.c \
+			  src/builtin_functions/builtin_cd_path.c \
 			  src/builtin_functions/builtin_env.c \
 			  src/builtin_functions/builtin_export.c \
 			  src/builtin_functions/builtin_export_print.c \
@@ -69,7 +70,9 @@ $(NAME): $(LIBFT) $(OBJS)
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.c
+HEADERS		= $(INCDIR)/minishell.h $(INCDIR)/structs.h $(LIBFT_DIR)/libft.h
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.c $(HEADERS)
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 

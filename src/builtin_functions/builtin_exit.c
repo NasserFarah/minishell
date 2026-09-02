@@ -93,6 +93,7 @@ int	builtin_exit(t_cmd *cmd, t_shell *shell)
 	if (!arg)
 	{
 		shell->should_exit = 1;
+		shell->exit_status = 0;
 		return (shell->exit_status);
 	}
 	if (!is_numeric(arg->value))

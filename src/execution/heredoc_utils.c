@@ -42,6 +42,29 @@ char	*heredoc_line(void)
 	return (line);
 }
 
+int	open_heredoc_file(char *path, size_t size)
+{
+	int		i;
+	int		fd;
+	char	*num;
+
+	i = 0;
+	while (i < 4096)
+	{
+		num = ft_itoa(i);
+		if (!num)
+			return (-1);
+		ft_strlcpy(path, "/tmp/.minishell_heredoc_", size);
+		ft_strlcat(path, num, size);
+		free(num);
+		fd = open(path, O_WRONLY | O_CREAT | O_EXCL, 0600);
+		if (fd != -1)
+			return (fd);
+		i++;
+	}
+	return (-1);
+}
+
 void	write_line(int fd, char *line, int want_expand, t_shell *shell)
 {
 	char	*out;

@@ -70,6 +70,7 @@ typedef struct s_cmd
 typedef struct s_shell
 {
 	t_env	*env;
+	char	*cwd;
 	int		exit_status;
 	int		interactive;
 	int		should_exit;
