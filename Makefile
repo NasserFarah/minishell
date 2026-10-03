@@ -1,6 +1,6 @@
 NAME		= minishell
 CC			= cc
-CFLAGS		= -Wall -Wextra -Werror -g -g3
+CFLAGS		= -Wall -Wextra -Werror
 RM			= rm -f
 
 SRCDIR		= src

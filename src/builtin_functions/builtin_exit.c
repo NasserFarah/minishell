@@ -88,12 +88,12 @@ int	builtin_exit(t_cmd *cmd, t_shell *shell)
 {
 	t_token	*arg;
 
-	ft_putendl_fd("exit", STDOUT_FILENO);
+	if (isatty(STDIN_FILENO) && !cmd->forked)
+		ft_putendl_fd("exit", STDERR_FILENO);
 	arg = cmd->args->next;
 	if (!arg)
 	{
 		shell->should_exit = 1;
-		shell->exit_status = 0;
 		return (shell->exit_status);
 	}
 	if (!is_numeric(arg->value))

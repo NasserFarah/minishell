@@ -12,14 +12,19 @@
 
 #include "minishell.h"
 
-static t_pipeline	*pipeline_fail(t_pipeline *pl)
+static t_pipeline	*pipeline_fail(t_pipeline *pl, int opened)
 {
-	if (pl)
+	int	i;
+
+	i = 0;
+	while (i < opened * 2)
 	{
-		free(pl->pids);
-		free(pl->pipes);
-		free(pl);
+		close(pl->pipes[i]);
+		i++;
 	}
+	free(pl->pids);
+	free(pl->pipes);
+	free(pl);
 	return (NULL);
 }
 
@@ -32,15 +37,21 @@ t_pipeline	*build_pipeline(int n_cmds)
 	if (!pl)
 		return (NULL);
 	pl->n_cmds = n_cmds;
+	pl->pipes = NULL;
 	pl->pids = malloc(sizeof(pid_t) * n_cmds);
-	pl->pipes = malloc(sizeof(int) * 2 * (n_cmds - 1));
-	if (!pl->pids || (n_cmds > 1 && !pl->pipes))
-		return (pipeline_fail(pl));
+	if (!pl->pids)
+		return (pipeline_fail(pl, 0));
+	if (n_cmds > 1)
+	{
+		pl->pipes = malloc(sizeof(int) * 2 * (n_cmds - 1));
+		if (!pl->pipes)
+			return (pipeline_fail(pl, 0));
+	}
 	i = 0;
 	while (i < n_cmds - 1)
 	{
 		if (pipe(pl->pipes + i * 2) == -1)
-			return (pipeline_fail(pl));
+			return (pipeline_fail(pl, i));
 		i++;
 	}
 	return (pl);

@@ -64,7 +64,10 @@ void	close_heredoc_fds(t_cmd *pipeline)
 		while (redir)
 		{
 			if (redir->type == REDIR_HEREDOC && redir->heredoc_fd >= 0)
+			{
 				close(redir->heredoc_fd);
+				redir->heredoc_fd = -1;
+			}
 			redir = redir->next;
 		}
 		pipeline = pipeline->next;

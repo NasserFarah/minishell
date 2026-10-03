@@ -64,6 +64,7 @@ typedef struct s_cmd
 {
 	t_token			*args;
 	t_redir			*redirs;
+	int				forked;
 	struct s_cmd	*next;
 }	t_cmd;
 

@@ -21,6 +21,7 @@ t_cmd	*new_cmd(void)
 		return (NULL);
 	cmd->args = NULL;
 	cmd->redirs = NULL;
+	cmd->forked = 0;
 	cmd->next = NULL;
 	return (cmd);
 }

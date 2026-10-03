@@ -28,7 +28,11 @@ static char	*expand_tilde_prefix(char *prefix, t_shell *shell)
 
 	value = NULL;
 	if (ft_strncmp(prefix, "~", 2) == 0)
+	{
 		value = env_get(shell->env, "HOME");
+		if (!value)
+			value = "/home";
+	}
 	else if (ft_strncmp(prefix, "~+", 3) == 0)
 		value = env_get(shell->env, "PWD");
 	else if (ft_strncmp(prefix, "~-", 3) == 0)
@@ -50,15 +54,12 @@ char	*tilde_expansion(char *word, t_shell *shell)
 	value = expand_tilde_prefix(prefix, shell);
 	if (!value)
 	{
-		result = ft_strdup("/home");
-		free(word);
+		free(prefix);
+		return (word);
 	}
-	else
-	{
-		result = ft_strjoin(value, word + ft_strlen(prefix));
-		free(value);
-		free(word);
-	}
+	result = ft_strjoin(value, word + ft_strlen(prefix));
+	free(value);
+	free(word);
 	free(prefix);
 	return (result);
 }

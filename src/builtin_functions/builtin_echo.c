@@ -19,9 +19,13 @@ static int	is_echo_n_flag(const char *s)
 	if (s[0] != '-' || s[1] != 'n')
 		return (0);
 	i = 1;
-	while (s[i] == 'n')
+	while (s[0] == '-' && s[i] == 'n')
+	{
 		i++;
-	return (1);
+		if (s[i] == '\0')
+			return (1);
+	}
+	return (0);
 }
 
 int	builtin_echo(t_cmd *cmd, t_shell *shell)

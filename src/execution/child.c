@@ -14,8 +14,11 @@
 
 static void	child_exit(t_child *ctx, int code)
 {
+	close_heredoc_fds(ctx->shell->pipeline);
 	free_cmd(ctx->shell->pipeline);
 	free_env(ctx->shell->env);
+	free(ctx->shell->cwd);
+	rl_clear_history();
 	free_pipeline(ctx->pl);
 	get_next_line(-1);
 	exit(code);
@@ -62,9 +65,11 @@ void	run_child(t_cmd *cmd, t_shell *shell, t_pipeline *pl, int idx)
 
 	ctx.shell = shell;
 	ctx.pl = pl;
+	cmd->forked = 1;
 	prepare_child(pl, idx);
 	if (apply_redirs(cmd->redirs) == -1)
 		child_exit(&ctx, 1);
+	close_heredoc_fds(shell->pipeline);
 	if (!cmd->args)
 		child_exit(&ctx, 0);
 	if (is_builtin(cmd->args->value))

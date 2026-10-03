@@ -1,7 +1,7 @@
-# Minishell
-
 This project has been created as part of the 42 curriculum by fnasser
  && abdunass.
+
+# Minishell
 
 ## Description
 Minishell is a simplified implementation of a Unix shell written in C.
